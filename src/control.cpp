@@ -313,22 +313,28 @@ int main(int argc, char **argv){
 	int num_state = 5;
 	int num_control = 2;
 	
-	MX state = MX::sym("state", 5); // X,Y,psi,V,delta
+	SX X = SX::sym("X", 1);
+	SX Y = SX::sym("Y", 1);
+	SX psi = SX::sym("psi", 1);
+	SX V = SX::sym("V", 1);
+	SX delta = SX::sym("delta", 1);
 
-	MX control = MX::sym("control", 2); // V_rate, delta_rate 
+	SX V_rate = SX::sym("V_rate", 1);
+	SX delta_rate = SX::sym("delta_rate", 1); 
 	
-	MX beta = atan((lr*tan(state(4)))/(lr+lr));
+	SX beta = atan((lr*tan(delta))/(lr+lr));
 	
-	std::cout << state << std::endl;
-	
-	MX rhs = vertcat(std::vector<MX>{state(0)+Ts*state(3)*cos(state(2)+beta),state(1)+Ts*state(3)*sin(state(2)+beta),state(2)+Ts*state(3)*(cos(beta)/((lr+lf)*tan(state(4)))),state(3)+control(0),state(4)+control(1)});
-	
-	MXDict ode = {{"state",state},{"ode",rhs}};
-	
-	std::vector<std::string> name_in = {"X","Y","psi","V","delta"};
-	std::vector<std::string> name_out = {"V_rate","delta_rate"};
-	Function f(std::string("f"),ode,name_in,name_out);
-	std::cout << f << std::endl;
+	std::vector<SX> rhs = std::vector<SX>{X+Ts*V*cos(psi+beta),
+									Y+Ts*V*cos(psi+beta),
+									psi+Ts*V*(cos(beta)/((lr+lf)*tan(delta))),
+									V+V_rate,
+									delta+delta_rate};
+	std::cout << rhs << std::endl;
+	std::vector<SX> state = std::vector<SX>{X,Y,psi,V,delta};
+	std::vector<SX> controls = std::vector<SX>{V_rate, delta_rate};
+std::cout << state << std::endl;
+	Function f("f",{state,controls},rhs);
+	std::cout << f << std::endl;/*
 	MX P_initState = MX::sym("P_initState",num_state); // params (initial state)
 	MX P_refState = MX::sym("P_refState",num_state); // params (reference state)
 
