@@ -23,6 +23,12 @@ cd build
 cmake -DWITH_PYTHON=ON ..
 ```
 
+**Install IPOPT to solve non-linear problems**
+
+```
+sudo apt-get install coinor-libipopt-dev
+```
+
 Full installantion guide at https://github.com/casadi/casadi/wiki/InstallationLinux
 
 
