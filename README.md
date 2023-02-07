@@ -25,6 +25,7 @@ cmake -DWITH_PYTHON=ON ..
 
 Full installantion guide at https://github.com/casadi/casadi/wiki/InstallationLinux
 
+
 **Download cmake files from [use_ext_libraries](/use_ext_libraries) directory**
 
 Open a terminal
