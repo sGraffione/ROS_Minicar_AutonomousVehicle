@@ -2,6 +2,8 @@
 #include "std_msgs/String.h"
 #include "minicar/Motors.h"
 #include "minicar/BtsData.h"
+#include "std_msgs/Float64MultiArray.h"
+#include "geometry_msgs/Twist.h"
 
 #include <cstdio>
 #include <cstdint>
@@ -21,8 +23,8 @@
 //LQT horizon
 #define T 5
 #define T_LESS_1 4
-#define Np 20
-#define Nc 5
+#define Np 5
+#define Nc 2
 
 using namespace casadi;
 
@@ -147,219 +149,351 @@ double finiteDifferenceTangent(double *pt0, double *pt1, double *pt2){
 	return mk;
 }
 
-Eigen::MatrixXd LQT(Eigen::MatrixXd X, Eigen::MatrixXd A, Eigen::MatrixXd B, Eigen::MatrixXd C, Eigen::MatrixXd Q, Eigen::MatrixXd R){
+// E/* igen::MatrixXd LQT(Eigen::MatrixXd X, Eigen::MatrixXd A, Eigen::MatrixXd B, Eigen::MatrixXd C, Eigen::MatrixXd Q, Eigen::MatrixXd R){
 	
-	Eigen::MatrixXd X_ref(3,1);
-	X_ref.setZero();
-	/*
-	std::cout << "Q\n" << Q << std::endl;
-	std::cout << "R\n" << R << std::endl;
-	std::cout << "A\n" << A << std::endl;
-	std::cout << "B\n" << B << std::endl;
-	std::cout << "C\n" << C << std::endl;
-	*/
-	Eigen::MatrixXd F = Q;
-	Eigen::MatrixXd E = B*R.inverse()*B.transpose();
-	Eigen::MatrixXd V = C.transpose()*Q*C;
-	Eigen::MatrixXd W = C.transpose()*Q;
-	/*
-	std::cout << "E\n" << E << std::endl;
-	std::cout << "V\n" << V << std::endl;
-	std::cout << "W\n" << W << std::endl;
-	*/
-	Eigen::MatrixXd P = Eigen::MatrixXd::Zero(A.rows(),A.cols());
-	std::vector<Eigen::MatrixXd> P_list(T,P);
+// 	Eigen::MatrixXd X_ref(3,1);
+// 	X_ref.setZero();
+// 	/*
+// 	std::cout << "Q\n" << Q << std::endl;
+// 	std::cout << "R\n" << R << std::endl;
+// 	std::cout << "A\n" << A << std::endl;
+// 	std::cout << "B\n" << B << std::endl;
+// 	std::cout << "C\n" << C << std::endl;
+// 	*/
+// 	Eigen::MatrixXd F = Q;
+// 	Eigen::MatrixXd E = B*R.inverse()*B.transpose();
+// 	Eigen::MatrixXd V = C.transpose()*Q*C;
+// 	Eigen::MatrixXd W = C.transpose()*Q;
+// 	/*
+// 	std::cout << "E\n" << E << std::endl;
+// 	std::cout << "V\n" << V << std::endl;
+// 	std::cout << "W\n" << W << std::endl;
+// 	*/
+// 	Eigen::MatrixXd P = Eigen::MatrixXd::Zero(A.rows(),A.cols());
+// 	std::vector<Eigen::MatrixXd> P_list(T,P);
 	
-	Eigen::MatrixXd g(A.rows(),T);
+// 	Eigen::MatrixXd g(A.rows(),T);
 	
-	Eigen::MatrixXd L = Eigen::MatrixXd::Zero(B.cols(),B.rows());
-	std::vector<Eigen::MatrixXd> L_list(T_LESS_1,L);
+// 	Eigen::MatrixXd L = Eigen::MatrixXd::Zero(B.cols(),B.rows());
+// 	std::vector<Eigen::MatrixXd> L_list(T_LESS_1,L);
 
-	Eigen::MatrixXd Lg = Eigen::MatrixXd::Zero(B.cols(),B.rows());
-	std::vector<Eigen::MatrixXd> Lg_list(T_LESS_1,Lg);
+// 	Eigen::MatrixXd Lg = Eigen::MatrixXd::Zero(B.cols(),B.rows());
+// 	std::vector<Eigen::MatrixXd> Lg_list(T_LESS_1,Lg);
 
-	Eigen::MatrixXd x_opt(A.rows(),T);
-	x_opt = Eigen::MatrixXd::Zero(A.rows(),T);
-	x_opt.block(0,0,x_opt.rows(),1) = X;
-	//std::cout << "x_opt:\n" << x_opt << std::endl;
+// 	Eigen::MatrixXd x_opt(A.rows(),T);
+// 	x_opt = Eigen::MatrixXd::Zero(A.rows(),T);
+// 	x_opt.block(0,0,x_opt.rows(),1) = X;
+// 	//std::cout << "x_opt:\n" << x_opt << std::endl;
 
-	Eigen::MatrixXd I = Eigen::MatrixXd::Identity(A.rows(),A.cols());
+// 	Eigen::MatrixXd I = Eigen::MatrixXd::Identity(A.rows(),A.cols());
 	
-	P_list[T-1] = C.transpose()*F*C;
+// 	P_list[T-1] = C.transpose()*F*C;
 
-	g.block(0,T-1,g.rows(),1) = C.transpose()*F*X_ref;
-	//std::cout << "P_list[" << T-1 << "]\n" << P_list[T-1] << std::endl;
-	for(int i=T-2; i>=0; i--){
-		P_list[i] = A.transpose()*P_list[i+1]*(I+E*P_list[i+1]).inverse()*A+V;
+// 	g.block(0,T-1,g.rows(),1) = C.transpose()*F*X_ref;
+// 	//std::cout << "P_list[" << T-1 << "]\n" << P_list[T-1] << std::endl;
+// 	for(int i=T-2; i>=0; i--){
+// 		P_list[i] = A.transpose()*P_list[i+1]*(I+E*P_list[i+1]).inverse()*A+V;
 		
-		g.block(0,i,g.rows(),1) = A.transpose()*(I-(P_list[i+1].inverse()+E).inverse())*g.block(0,i+1,g.rows(),1)+W*X_ref;
-	}
-	//std::cout << "g\n" << g << std::endl;
-	for(int i=0; i<T-1; i++){
-		P = P_list[i+1];
-		//std::cout << "P_list[" << i+1 << "]\n" << P_list[i+1] << std::endl;
-		Eigen::MatrixXd temp = ((R+B.transpose()*P_list[i+1]*B).inverse())*B.transpose();
-		L_list[i] = temp*P_list[i+1]*A;
-		//std::cout << "L_list[" << i+1 << "]\n" << L_list[i] << std::endl;
-		Lg_list[i] = temp;
-		//std::cout << "Lg_list[" << i+1 << "]\n" << Lg_list[i] << std::endl;
-		//L = L_list[i];
-		//Lg = Lg_list[i];
+// 		g.block(0,i,g.rows(),1) = A.transpose()*(I-(P_list[i+1].inverse()+E).inverse())*g.block(0,i+1,g.rows(),1)+W*X_ref;
+// 	}
+// 	//std::cout << "g\n" << g << std::endl;
+// 	for(int i=0; i<T-1; i++){
+// 		P = P_list[i+1];
+// 		//std::cout << "P_list[" << i+1 << "]\n" << P_list[i+1] << std::endl;
+// 		Eigen::MatrixXd temp = ((R+B.transpose()*P_list[i+1]*B).inverse())*B.transpose();
+// 		L_list[i] = temp*P_list[i+1]*A;
+// 		//std::cout << "L_list[" << i+1 << "]\n" << L_list[i] << std::endl;
+// 		Lg_list[i] = temp;
+// 		//std::cout << "Lg_list[" << i+1 << "]\n" << Lg_list[i] << std::endl;
+// 		//L = L_list[i];
+// 		//Lg = Lg_list[i];
 		
-		//std::cout << "x_opt.block\n" << x_opt.block(0,i,x_opt.rows(),1) << std::endl;
-		//std::cout << "g.block\n" << g.block(0,i+1,g.rows(),1) << std::endl;
-		Eigen::MatrixXd xblock = x_opt.block(0,i,x_opt.rows(),1);
-		Eigen::MatrixXd gblock = g.block(0,i+1,g.rows(),1);
+// 		//std::cout << "x_opt.block\n" << x_opt.block(0,i,x_opt.rows(),1) << std::endl;
+// 		//std::cout << "g.block\n" << g.block(0,i+1,g.rows(),1) << std::endl;
+// 		Eigen::MatrixXd xblock = x_opt.block(0,i,x_opt.rows(),1);
+// 		Eigen::MatrixXd gblock = g.block(0,i+1,g.rows(),1);
 		
-		Eigen::MatrixXd temp2 = (A-B*L_list[i])*xblock + B*Lg_list[i]*gblock;
-		//std::cout << "temp2" << temp2 << std::endl;
-		x_opt.block(0,i+1,3,1) = temp2;
-		//std::cout << "x_opt: " << i << " \n" << x_opt << std::endl;
-	}
+// 		Eigen::MatrixXd temp2 = (A-B*L_list[i])*xblock + B*Lg_list[i]*gblock;
+// 		//std::cout << "temp2" << temp2 << std::endl;
+// 		x_opt.block(0,i+1,3,1) = temp2;
+// 		//std::cout << "x_opt: " << i << " \n" << x_opt << std::endl;
+// 	}
 
-	Eigen::MatrixXd U = -L_list[1]*x_opt.block(0,1,x_opt.rows(),1)+Lg_list[1]*g.block(0,2,g.rows(),1);
+// 	Eigen::MatrixXd U = -L_list[1]*x_opt.block(0,1,x_opt.rows(),1)+Lg_list[1]*g.block(0,2,g.rows(),1);
 	
-	return U;
-	//std::cout << "U\n" << U << std::endl;
-}
+// 	return U;
+// 	//std::cout << "U\n" << U << std::endl;
+// }
 
-Eigen::MatrixXd MPC(Eigen::VectorXd Xr, Eigen::VectorXd X, Eigen::MatrixXd A, Eigen::MatrixXd B, Eigen::MatrixXd C, Eigen::MatrixXd Q_bar, Eigen::MatrixXd R_bar){
-	int n1 = (int)A.rows();
-	int m = (int)B.cols();
-	int q = (int)C.rows();
+// Eigen::MatrixXd MPC(Eigen::VectorXd Xr, Eigen::VectorXd X, Eigen::MatrixXd A, Eigen::MatrixXd B, Eigen::MatrixXd C, Eigen::MatrixXd Q_bar, Eigen::MatrixXd R_bar){
+// 	int n1 = (int)A.rows();
+// 	int m = (int)B.cols();
+// 	int q = (int)C.rows();
 	
-	Eigen::MatrixXd X_ref(Xr.rows() * Np, 1);
-	Xr.setZero();
-	for (int i = 0; i < Np; i++)
-	{
-		X_ref.block(i*Xr.rows(), 0, Xr.rows(), 1) = Xr;
-	}
+// 	Eigen::MatrixXd X_ref(Xr.rows() * Np, 1);
+// 	Xr.setZero();
+// 	for (int i = 0; i < Np; i++)
+// 	{
+// 		X_ref.block(i*Xr.rows(), 0, Xr.rows(), 1) = Xr;
+// 	}
 	
-	Eigen::MatrixXd Cp_element = C*A;
-	Eigen::MatrixXd Cp = Cp_element;
+// 	Eigen::MatrixXd Cp_element = C*A;
+// 	Eigen::MatrixXd Cp = Cp_element;
 	
-	int rows = (int)Cp_element.rows();
-	for (int i = 1; i < Np; i++){
-		Cp_element *= A;
-		Cp.conservativeResize(Cp.rows()+rows, Cp.cols());
-		Cp.bottomRows(rows) = Cp_element;
-	}
+// 	int rows = (int)Cp_element.rows();
+// 	for (int i = 1; i < Np; i++){
+// 		Cp_element *= A;
+// 		Cp.conservativeResize(Cp.rows()+rows, Cp.cols());
+// 		Cp.bottomRows(rows) = Cp_element;
+// 	}
 
-	Eigen::MatrixXd Dp_firstCol = C*B;
-	Eigen::MatrixXd tempElement, AElem;
-	AElem = A;
-	int blockSizeRow = (int)Dp_firstCol.rows();
-	int blockSizeCol = (int)Dp_firstCol.cols();
-	for (int i = 1; i < Np; i++){
-		if (i >= 2){
-			AElem *= A;
-		}
-		tempElement = C*AElem*B;
-		Dp_firstCol.conservativeResize(Dp_firstCol.rows()+blockSizeRow,Dp_firstCol.cols());
-		Dp_firstCol.bottomRows(tempElement.rows()) = tempElement;
-	}
+// 	Eigen::MatrixXd Dp_firstCol = C*B;
+// 	Eigen::MatrixXd tempElement, AElem;
+// 	AElem = A;
+// 	int blockSizeRow = (int)Dp_firstCol.rows();
+// 	int blockSizeCol = (int)Dp_firstCol.cols();
+// 	for (int i = 1; i < Np; i++){
+// 		if (i >= 2){
+// 			AElem *= A;
+// 		}
+// 		tempElement = C*AElem*B;
+// 		Dp_firstCol.conservativeResize(Dp_firstCol.rows()+blockSizeRow,Dp_firstCol.cols());
+// 		Dp_firstCol.bottomRows(tempElement.rows()) = tempElement;
+// 	}
 	
-	Eigen::MatrixXd Dp = Dp_firstCol;
-	Eigen::MatrixXd Dp_newCol(Dp_firstCol.rows(), Dp_firstCol.cols()), zeroBlock, tempBlock;
+// 	Eigen::MatrixXd Dp = Dp_firstCol;
+// 	Eigen::MatrixXd Dp_newCol(Dp_firstCol.rows(), Dp_firstCol.cols()), zeroBlock, tempBlock;
 	
 
-	for (int j = 1; j < Nc; j++){
-		zeroBlock.setZero(blockSizeRow*j,blockSizeCol);
-		Dp_newCol.topRows(zeroBlock.rows()) = zeroBlock;
-		tempBlock = Dp_firstCol.topRows(Dp_firstCol.rows() - blockSizeRow * j);
-		Dp_newCol.bottomRows(tempBlock.rows()) = tempBlock;
+// 	for (int j = 1; j < Nc; j++){
+// 		zeroBlock.setZero(blockSizeRow*j,blockSizeCol);
+// 		Dp_newCol.topRows(zeroBlock.rows()) = zeroBlock;
+// 		tempBlock = Dp_firstCol.topRows(Dp_firstCol.rows() - blockSizeRow * j);
+// 		Dp_newCol.bottomRows(tempBlock.rows()) = tempBlock;
 
-		Dp.conservativeResize(Dp.rows(), Dp.cols()+Dp_newCol.cols());
-		Dp.rightCols(blockSizeCol) = Dp_newCol;
-	}
+// 		Dp.conservativeResize(Dp.rows(), Dp.cols()+Dp_newCol.cols());
+// 		Dp.rightCols(blockSizeCol) = Dp_newCol;
+// 	}
 	
-	/*std::cout << "Dp\n" << Dp << std::endl;
-	std::cout << "Q_bar\n" << Q_bar << std::endl;
-	std::cout << "R_bar\n" << R_bar << std::endl;*/
+// 	/*std::cout << "Dp\n" << Dp << std::endl;
+// 	std::cout << "Q_bar\n" << Q_bar << std::endl;
+// 	std::cout << "R_bar\n" << R_bar << std::endl;*/
 	
-	Eigen::MatrixXd H = Dp.transpose()*Q_bar*Dp + R_bar;
-	/*
-	std::cout << "X\n" << X << std::endl;
-	std::cout << "X_ref\n" << X_ref << std::endl;
-	std::cout << "Cp\n" << Cp << std::endl;
-	*/
-	Eigen::MatrixXd f = 2*Dp.transpose()*(Cp*X-X_ref);
+// 	Eigen::MatrixXd H = Dp.transpose()*Q_bar*Dp + R_bar;
+// 	/*
+// 	std::cout << "X\n" << X << std::endl;
+// 	std::cout << "X_ref\n" << X_ref << std::endl;
+// 	std::cout << "Cp\n" << Cp << std::endl;
+// 	*/
+// 	Eigen::MatrixXd f = 2*Dp.transpose()*(Cp*X-X_ref);
 	
-	Eigen::MatrixXd U = -H.inverse()*f;
-	return U.block(0,0,2,1); // Return only the first m controls
-	//std::cout << U << std::endl;
-}
+// 	Eigen::MatrixXd U = -H.inverse()*f;
+// 	return U.block(0,0,2,1); // Return only the first m controls
+// 	//std::cout << U << std::endl;
+// }
 /*
 void MPCCasadi(){
-	casadi::SX X = casadi::SX::sym("X", 1);
-	casadi::SX Y = casadi::SX::sym("Y", 1);
-	casadi::SX psi = casadi::SX::sym("psi", 1);
-	casadi::SX V = casadi::SX::sym("V", 3);
-	casadi::SX delta = casadi::SX::sym("delta", 3);
+	casadi::MX X = casadi::MX::sym("X", 1);
+	casadi::MX Y = casadi::MX::sym("Y", 1);
+	casadi::MX psi = casadi::MX::sym("psi", 1);
+	casadi::MX V = casadi::MX::sym("V", 3);
+	casadi::MX delta = casadi::MX::sym("delta", 3);
 }
 */
 int main(int argc, char **argv){
 	ros::init(argc, argv, "controller");
 	ROS_INFO("Connected to roscore");
 	ros::NodeHandle n;
-	ros::Publisher current_pub = n.advertise<minicar::Motors>("motorsCtrl",1);
+	//ros::Publisher current_pub = n.advertise<minicar::Motors>("motorsCtrl",1);
+	ros::Publisher current_pub_drive = n.advertise<geometry_msgs::Twist>("/minicar_driving_controller/cmd_vel",1);
+	ros::Publisher current_pub_steer = n.advertise<std_msgs::Float64MultiArray>("/minicar_steer_controller/command",1);
+	
 	ros::Subscriber sub = n.subscribe("position",1,positionCallback);
 	
 	ros::Rate loop_rate(1/Ts);
 	
 	double lr = 0.07;
 	double lf = 0.07;
-	
-	int num_state = 5;
-	int num_control = 2;
-	
-	SX X = SX::sym("X", 1);
-	SX Y = SX::sym("Y", 1);
-	SX psi = SX::sym("psi", 1);
-	SX V = SX::sym("V", 1);
-	SX delta = SX::sym("delta", 1);
 
-	SX V_rate = SX::sym("V_rate", 1);
-	SX delta_rate = SX::sym("delta_rate", 1); 
-	
-	SX beta = atan((lr*tan(delta))/(lr+lr));
-	
-	std::vector<SX> rhs = std::vector<SX>{X+Ts*V*cos(psi+beta),
-									Y+Ts*V*cos(psi+beta),
-									psi+Ts*V*(cos(beta)/((lr+lf)*tan(delta))),
-									V+V_rate,
-									delta+delta_rate};
-	std::cout << rhs << std::endl;
-	std::vector<SX> state = std::vector<SX>{X,Y,psi,V,delta};
-	std::vector<SX> controls = std::vector<SX>{V_rate, delta_rate};
-std::cout << state << std::endl;
-	Function f("f",{state,controls},rhs);
-	std::cout << f << std::endl;/*
-	MX P_initState = MX::sym("P_initState",num_state); // params (initial state)
-	MX P_refState = MX::sym("P_refState",num_state); // params (reference state)
+	double q1 = 1;
+	double q2 = 1;
+	double q3 = 1;
+	double q4 = 1;
+	double q5 = 1;
+	double r1 = 1;
+	double r2 = 2;
 
-	MX states = MX::sym("states",num_state,Np+1);
-	MX U = MX::sym("U",num_control,Np);
+	double X_init = 0.6;
+	double Y_init = 0.6;
+	double psi_init = M_PI_2;
+
+	MX X = MX::sym("X", 1);
+	MX Y = MX::sym("Y", 1);
+	MX psi = MX::sym("psi", 1);
+
+	MX V = MX::sym("V", 1);
+	MX delta = MX::sym("delta", 1); 
+
+	MX state = vertcat(X,Y,psi);
+	MX controls = vertcat(V, delta);
+
+	// Number of differential states
+	int nx = state.size1();
+
+	// Number of controls
+	int nu = controls.size1();
+
+	// Bounds and initial guess for the control
+	std::vector<double> u_min =  { -0.3, -0.523599  };
+	std::vector<double> u_max  = {  0.3,  0.523599  };
+	std::vector<double> u_init = {  0.0,  0.0  };
+
+	// Bounds and initial guess for the state
+	std::vector<double> x_min  = { 0, 0, -inf };
+	std::vector<double> x_max  = { 6, 6,  inf };
+	std::vector<double> x_init = { X_init, Y_init, psi_init }; // to get from localization topic
+
+	// Non linear, time continuous equations of the system
+	MX beta = atan((lr*tan(delta))/(lr+lr));
+	MX rhs = vertcat(V*cos(psi+beta),
+					 V*cos(psi+beta),
+					 V*(cos(beta)/((lr+lf)*tan(delta))));
 	
-	MX st = MX::sym("st",num_state);
-	MX con = MX::sym("con",num_control);
-	states.get(st,1,Slice(),Slice(0,0,1));
-	std::cout << st << std::endl;
-	/*
-	MX obj = MX::sym("obj",1); 
-	MX g = st-P_initState; // constraints vector
+	MXDict dae = {{"x",state},{"p",controls},{"ode",rhs}}; // build a dictionary containing state, control and equations vector
+
+	// Create an integrator to derivate the rhs (rk param states for RungeKutta integration)
+	Function f = integrator("integrator","rk",dae,{{"t0",0},{"tf",Np}});
+	
+	MX P_initState = MX::sym("P_initState",nx); // params (initial state)
+	MX P_refState = MX::sym("P_refState",nx); // params (reference state)
+	MX P = vertcat(P_initState,P_refState);
+
+	MX states = MX::sym("state",nx,Np+1); // state matrix over the prediction horizon
+	MX U = MX::sym("U",nu,Np); // control vector over the prediction horizon
+	
+	// varVect has a length equal to the total number of variable for the NLP
+	int NV = nx*(Np+1)+nu*Np;
+	std::vector<double> v_min,v_max,v_init;
+
+	MX varVect = MX::sym("varVect",NV);
+
+	// Construction of symbolic cost function
+	MXVector st, con;
+
+	// Offset in varVect
+	int offset = 0;
+
 	for(int i = 0; i < Np; i++){
-		states.get(st,1,Slice(),Slice(i,i,1));
-		U.get(con,1,Slice(),Slice(i,i,1));
-		obj = obj + q1*pow(st(0)-P_refState(0),2) + q2*pow(st(1)-P_refState(1),2) + q3*pow(st(2)-P_refState(2),2) + q4*pow(st(3)-P_refState(3),2) + q5*pow(st(4)-P_refState(4),2) + r1*pow(con(0),2) + r2*pow(con(1),2);
-		
-		MX st_next = MX::sym("st_next",num_state);
-		states.get(st_euler,1,Slice(),Slice(i+1,i+1,1));
-		MX st_next_euler = 
+		st.push_back(varVect.nz(Slice(offset,offset+nx)));
+		v_min.insert(v_min.end(),x_min.begin(),x_min.end());
+		v_max.insert(v_max.end(),x_max.begin(),x_max.end());
+		v_init.insert(v_init.end(), x_init.begin(), x_init.end());
+		offset += nx;
+
+		con.push_back(varVect.nz(Slice(offset,offset+nu)));
+		v_min.insert(v_min.end(),u_min.begin(),u_min.end());
+		v_max.insert(v_max.end(),u_max.begin(),u_max.end());
+		v_init.insert(v_init.end(), u_init.begin(), u_init.end());
+		offset += nu;
+	}
+	st.push_back(varVect.nz(Slice(offset,offset+nx)));
+	v_min.insert(v_min.end(), x_min.begin(), x_min.end());
+	v_max.insert(v_max.end(), x_max.begin(), x_max.end());
+	v_init.insert(v_init.end(), x_init.begin(), x_init.end());
+	offset += nx;
+
+	// verify that offset has reached the end of varVect
+	casadi_assert(offset==NV,"offset!=NV");
+
+	MX obj = 0; // Objective function
+	MXVector g; // constraints vector and bounds
+
+	// Loop over shooting nodes
+	for(int k=0; k<Np; ++k){
+	// Create an evaluation node
+		MXDict I_out = f(MXDict{{"x0", st[k]}, {"p", con[k]}});
+		//std::cout << I_out << std::endl;
+		// Save continuity constraints
+		g.push_back( st[k+1] - I_out.at("xf") );
+		obj += q1*pow(st[k](0)-P_refState(0),2) + q2*pow(st[k](1)-P_refState(1),2) + q3*pow(st[k](2)-P_refState(2),2) + r1*pow(con[k](0),2) + r2*pow(con[k](1),2);
+		// Add objective function contribution
+		//obj += I_out.at("qf");
 	}
 	
-	*/
-	
+	// NLP
+	MXDict nlp = {{"x", varVect}, {"f", obj}, {"g", vertcat(g)},{"p",P}};
+
+	// Set options
+	Dict opts;
+	opts["ipopt.tol"] = 1e-2;
+	opts["ipopt.max_iter"] = 100;
+
+	// Create an NLP solver and buffers
+	Function solver = nlpsol("nlpsol", "ipopt", nlp, opts);
+	std::map<std::string, DM> arg, res;
+
+	// Bounds and initial guess
+	arg["lbx"] = v_min;
+	arg["ubx"] = v_max;
+	arg["lbg"] = 0;
+	arg["ubg"] = 0;
+	arg["x0"] = v_init;
+
+	std::vector<double> P_nlp = { X_init, Y_init, psi_init, 0.6, 5.0, 0 };
+
+	arg["p"] = P_nlp;
+
+	// Solve the problem
+	res = solver(arg);
+
+	// Optimal solution of the NLP
+	std::vector<double> V_opt(res.at("x"));
+
+	// Get the optimal state trajectory
+	std::vector<double> r_opt(Np+1), s_opt(Np+1);
+	for(int i=0; i<=Np; ++i){
+		r_opt[i] = V_opt.at(i*(nx+1));
+		s_opt[i] = V_opt.at(1+i*(nx+1));
+	}
+	std::cout << "r_opt = " << std::endl << r_opt << std::endl;
+	std::cout << "s_opt = " << std::endl << s_opt << std::endl;
+
+	// Get the optimal control
+	std::vector<double> u_opt(Np);
+	for(int i=0; i<Np; ++i){
+		u_opt[i] = V_opt.at(nx + i*(nx+1));
+	}
+	std::cout << "u_opt = " << std::endl << u_opt << std::endl;
+
+/*
+	// Bounds and initial guess
+	arg["lbx"] = v_min;
+	arg["ubx"] = v_max;
+	arg["lbg"] = 0;
+	arg["ubg"] = 0;
+	arg["x0"] = v_init;
+
+	// Solve the problem
+	res = solver(arg);
+
+	// Optimal solution of the NLP
+	vector<double> V_opt(res.at("x"));
+
+	// Get the optimal state trajectory
+	vector<double> r_opt(ns+1), s_opt(ns+1);
+	for(int i=0; i<=ns; ++i){
+	r_opt[i] = V_opt.at(i*(nx+1));
+	s_opt[i] = V_opt.at(1+i*(nx+1));
+	}
+	cout << "r_opt = " << endl << r_opt << endl;
+	cout << "s_opt = " << endl << s_opt << endl;
+
+	// Get the optimal control
+	vector<double> u_opt(ns);
+	for(int i=0; i<ns; ++i){
+	u_opt[i] = V_opt.at(nx + i*(nx+1));
+	}
+	cout << "u_opt = " << endl << u_opt << endl;
 	/*
 	double goal[2];
 	//double q1,q2,q3,r1,r2;
@@ -449,7 +583,20 @@ std::cout << state << std::endl;
 		
 		ros::spinOnce();
 
-		minicar::Motors motorsCtrl;
+		std_msgs::Float64MultiArray cmdS;
+		geometry_msgs::Twist cmdV;
+		cmdS.data= {0.3, 0.3};
+		cmdV.linear.x = 0.1;
+		cmdV.linear.y = 0;
+		cmdV.linear.z = 0;
+		cmdV.angular.x = 0;
+		cmdV.angular.y = 0;
+		cmdV.angular.z = 0;
+
+		current_pub_steer.publish(cmdS);
+		current_pub_drive.publish(cmdV);
+
+		//minicar::Motors motorsCtrl;
 		
 		/*if(indexWP<rows){
 			//ROS_INFO("Position: [%f %f]",position[0],position[1]);
@@ -482,7 +629,7 @@ std::cout << state << std::endl;
 		}*/
 		//ROS_INFO("Position: [%f %f %f]\nControl: [%f %f]", position[0],position[1],X(2,0)*180/M_PI,dutyCycle2speed(motorsCtrl.throttle), motorsCtrl.steering);
 		
-		current_pub.publish(motorsCtrl);
+		//current_pub.publish(motorsCtrl);
 		
 		//ROS_INFO("Control actions [%f %f]",speed,delta);
 		
