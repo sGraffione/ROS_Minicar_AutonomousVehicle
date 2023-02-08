@@ -8,6 +8,11 @@ Implementation of Autonomous system with ROS on a Minicar provided of a Raspberr
 - [Casadi](https://github.com/casadi/casadi)
 
 
+ **Install IPOPT to solve non-linear problems**
+
+```
+sudo apt-get install coinor-libipopt-dev
+```
 **Install casadi by compiling from source**
 
 ```
@@ -20,13 +25,12 @@ cd casadi
 mkdir build
 cd build
 
-cmake -DWITH_PYTHON=ON ..
+cmake -DWITH_PYTHON=ON -DWITH_IPOPT=true ..
 ```
-
-**Install IPOPT to solve non-linear problems**
-
+Now build from source and install
 ```
-sudo apt-get install coinor-libipopt-dev
+make
+sudo make install
 ```
 
 Full installantion guide at https://github.com/casadi/casadi/wiki/InstallationLinux
