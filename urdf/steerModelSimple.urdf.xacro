@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="minicar">
+    
+    <link name="dummy"></link>
+    <joint name="dummy_joint" type="fixed">
+        <parent link="dummy"/>
+        <child link="chassis"/>
+    </joint>
+
+    <xacro:property name="const" value="0.083"/>
+    <xacro:property name="massV" value="4"/>
+    <xacro:property name="width" value="0.17"/>
+    <xacro:property name="heigth" value="0.045"/>
+    <xacro:property name="depth" value="0.11"/>
+
+    <xacro:property name="massWheel" value="0.2"/>
+    <xacro:property name="radiusWheel" value="0.033"/>
+    <xacro:property name="heightWheel" value="0.025"/>
+    
+    
+    <!-- chassis -->
+    <link name="chassis">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="${massV}"/>
+            <inertia ixx="${const * massV * (heigth * heigth + depth * depth)}" ixy="0.0" ixz="0.0"
+                    iyy="${const * massV * (heigth * heigth + width * width)}" iyz="0.0"
+                    izz="${const * massV * (width * width + depth * depth)}"/>
+        </inertial>
+        <visual name="">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.17 0.11 0.045"/>
+            </geometry>
+            <material name="">
+                <color rgba="1.0 0.0 0.0 1.0"/>
+                <texture filename=""/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.22 0.11 0.045"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="chassis_front_link">
+        <visual name="">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.05 0.11 0.003"/>
+            </geometry>
+            <material name="">
+                <color rgba="1.0 0.0 0.0 1.0"/>
+                <texture filename=""/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name="chassis_front_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_front_link"/>
+        <origin xyz="0.1 0.0 -0.021" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <!-- Rear wheels macro-->
+    <xacro:macro name="wheel" params="name x y z roll">
+        <link name="wheel_${name}_link">
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="${massWheel}"/>
+                <inertia ixx="${const*massWheel*(3*radiusWheel*radiusWheel + heightWheel*heightWheel)}" ixy="0.0" ixz="0.0"
+                        iyy="${const*massWheel*(3*radiusWheel*radiusWheel + heightWheel*heightWheel)}" iyz="0.0"
+                        izz="${0.5*massWheel*radiusWheel*radiusWheel}"/>
+            </inertial>
+            <visual name="">
+                <origin xyz="0.0 0.0 0.0" rpy="${roll} 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="${radiusWheel}" length="${heightWheel}"/>
+                </geometry>
+                <material name="gray">
+                    <color rgba="0.5 0.5 0.5 1.0"/>
+                    <texture filename=""/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="${radiusWheel}" length="${heightWheel}"/>
+                </geometry>
+                <surface>
+                <friction>
+                    <ode>
+                        <mu>100.01</mu>
+                        <mu2>200s.01</mu2>
+                        <fdir1>0 0 1</fdir1>
+                        <slip1>0</slip1>
+                        <slip2>0</slip2>
+                    </ode>
+                </friction>
+                <bounce>
+                    <restitution_coefficient>0.0</restitution_coefficient>
+                    <threshold>100000.0</threshold>
+                </bounce>
+                <contact>
+                    <ode>
+                        <soft_cfm>0.0</soft_cfm>
+                        <soft_erp>0.2</soft_erp>
+                        <kp>100000.0</kp>
+                        <kd>1.0</kd>
+                        <max_vel>100.0</max_vel>
+                        <min_depth>0.001</min_depth>
+                    </ode>
+                </contact>
+            </surface>
+            </collision>
+        </link>
+        <joint name="wheel_${name}_joint" type="continuous">
+            <parent link="chassis"/>
+            <child link="wheel_${name}_link"/>
+            <axis xyz="0 0 -1"/>
+            <origin xyz="${x} ${y} ${z}" rpy="1.5707 0 0"/>
+            <joint_properties damping="1.0" friction="1.0" />
+        </joint>       
+
+        <transmission name="wheel_${name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="wheel_${name}_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="wheel_${name}_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+
+
+    </xacro:macro>
+
+    <!-- Front steer wheels macro-->
+    <xacro:macro name="steer_wheel" params="name x y z roll">
+        <link name="wheel_${name}_link">
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="${massWheel}"/>
+                <inertia ixx="${const*massWheel*(3*radiusWheel*radiusWheel + heightWheel*heightWheel)}" ixy="0.0" ixz="0.0"
+                        iyy="${const*massWheel*(3*radiusWheel*radiusWheel + heightWheel*heightWheel)}" iyz="0.0"
+                        izz="${0.5*massWheel*radiusWheel*radiusWheel}"/>
+            </inertial>
+            <visual name="">
+                <origin xyz="0.0 0.0 0.0" rpy="${roll} 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="${radiusWheel}" length="${heightWheel}"/>
+                </geometry>
+                <material name="gray">
+                    <color rgba="0.5 0.5 0.5 1.0"/>
+                    <texture filename=""/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="${radiusWheel}" length="${heightWheel}"/>
+                </geometry>
+            </collision>
+
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>200</mu>
+                        <mu2>400</mu2>
+                        <fdir1>0 0 1</fdir1>
+                        <slip1>0</slip1>
+                        <slip2>0</slip2>
+                    </ode>
+                </friction>
+                <bounce>
+                    <restitution_coefficient>0.0</restitution_coefficient>
+                    <threshold>100000.0</threshold>
+                </bounce>
+                <contact>
+                    <ode>
+                        <soft_cfm>0.0</soft_cfm>
+                        <soft_erp>0.2</soft_erp>
+                        <kp>10000000.0</kp>
+                        <kd>1.0</kd>
+                        <max_vel>0.3</max_vel>
+                        <min_depth>0.05</min_depth>
+                    </ode>
+                </contact>
+            </surface>
+        </link>
+
+        <link name="steer_${name}_link">
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <box size="0.001 0.001 0.001"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <box size="0.001 0.001 0.001"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="0.01"/>
+               <inertia ixx="0.01" ixy="0.01" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+            </inertial>
+        </link>
+
+        <joint name="steer_${name}_joint" type="revolute">
+            <parent link="chassis"/>
+            <child link="steer_${name}_link"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="-0.6" upper="0.6" velocity="1" effort="10.0"/>
+            <origin xyz="${x} ${y} ${z}" rpy="0 0 0"/>
+        </joint>
+        
+
+        <joint name="wheel_${name}_joint" type="continuous">
+            <parent link="steer_${name}_link"/>
+            <child link="wheel_${name}_link"/>
+            <axis xyz="0 0 -1"/>
+            <origin xyz="0 0 0" rpy="1.5707 0 0"/>
+            <joint_properties damping="1.0" friction="1.0" />
+        </joint>
+
+        <transmission name="steer_${name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="steer_${name}_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="steer_${name}_joint">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+        </transmission>    
+    </xacro:macro>
+
+    <!-- Wheels generation-->
+    <!-- Rear wheels -->
+    <xacro:wheel name="rear_right" x="-0.055" y="-0.0755" z="-0.014" roll="-0.02"/>
+    <xacro:wheel name="rear_left" x="-0.055" y="0.0755" z="-0.014" roll="0.02"/>
+    <!-- Front steer wheels -->
+    <xacro:steer_wheel name="front_right" x="0.055" y="-0.0755" z="-0.014" roll="-0.02"/>
+    <xacro:steer_wheel name="front_left" x="0.055" y="0.0755" z="-0.014" roll="0.02"/>
+
+    <gazebo>
+        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>10.0</updateRate>
+            <bodyName>chassis</bodyName>
+            <topicName>localization/state</topicName>
+            <gaussianNoise>0.05</gaussianNoise>
+            <frameName>world</frameName>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+        </plugin>
+    </gazebo>
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
+</robot>

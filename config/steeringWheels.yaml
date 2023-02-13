@@ -1,0 +1,4 @@
+type: "position_controllers/JointGroupPositionController"
+joints:
+  - steer_front_left_joint
+  - steer_front_right_joint

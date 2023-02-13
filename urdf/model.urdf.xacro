@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="minicar">
+    
+    <link name="world"/>
+
+    <xacro:property name="const" value="0.083"/>
+    <xacro:property name="massV" value="0.8"/>
+    <xacro:property name="width" value="0.22"/>
+    <xacro:property name="heigth" value="0.045"/>
+    <xacro:property name="depth" value="0.11"/>
+
+    <xacro:property name="massWheel" value="0.05"/>
+    <xacro:property name="radiusWheel" value="0.033"/>
+    <xacro:property name="heightWheel" value="0.025"/>
+    
+    
+    <!-- chassis -->
+    <link name="chassis">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="${massV}"/>
+            <inertia ixx="${const * massV * (heigth * heigth + depth * depth)}" ixy="0.0" ixz="0.0"
+                    iyy="${const * massV * (heigth * heigth + width * width)}" iyz="0.0"
+                    izz="${const * massV * (width * width + depth * depth)}"/>
+        </inertial>
+        <visual name="">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.17 0.11 0.045"/>
+            </geometry>
+            <material name="">
+                <color rgba="1.0 0.0 0.0 1.0"/>
+                <texture filename=""/>
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.22 0.11 0.045"/>
+            </geometry>
+        </collision>
+    </link>
+    
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.05" rpy="0.0 0.0 0.0"/>
+        <parent link="world"/>
+        <child link="chassis"/>
+        <axis xyz="0.0 0.0 0.0"/>
+    </joint>
+
+    <link name="chassis_front_link">
+        <visual name="">
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <box size="0.05 0.11 0.003"/>
+            </geometry>
+            <material name="">
+                <color rgba="1.0 0.0 0.0 1.0"/>
+                <texture filename=""/>
+            </material>
+        </visual>
+    </link>
+
+    <joint name="chassis_front_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="chassis_front_link"/>
+        <origin xyz="0.1 0.0 -0.021" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <!-- Wheel macro-->
+    <xacro:macro name="wheel" params="name x y z">
+        <link name="wheel_${name}_link">
+            <inertial>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <mass value="0.05"/>
+                <inertia ixx="${const*massWheel*(3*radiusWheel*radiusWheel + heightWheel*heightWheel)}" ixy="0.0" ixz="0.0"
+                        iyy="${const*massWheel*(3*radiusWheel*radiusWheel + heightWheel*heightWheel)}" iyz="0.0"
+                        izz="${0.5*massWheel*radiusWheel*radiusWheel}"/>
+            </inertial>
+            <visual name="">
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="0.033" length="0.025"/>
+                </geometry>
+                <material name="gray">
+                    <color rgba="0.5 0.5 0.5 1.0"/>
+                    <texture filename=""/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <cylinder radius="0.033" length="0.025"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="wheel_${name}_joint" type="continuous">
+            <parent link="chassis"/>
+            <child link="wheel_${name}_link"/>
+            <axis xyz="0 0 -1"/>
+            <origin xyz="${x} ${y} ${z}" rpy="1.5707 0 0"/>
+        </joint>
+
+        <gazebo reference="wheel_${name}_joint">
+            <mu1 value="200.0"/>
+            <mu2 value="100.0"/>
+            <kp value="10000000.0" />
+            <kd value="1.0" />
+            <material>Gazebo/Grey</material>
+        </gazebo>
+
+        <transmission name="wheel_${name}_trasm">
+            <type>transmission_interface/SimpleTransmission</type>
+            <actuator name="$wheel_${name}_joint_motor">
+                <mechanicalReduction>1</mechanicalReduction>
+            </actuator>
+            <joint name="wheel_${name}_joint">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+        </transmission>
+        
+    </xacro:macro>
+
+    <!-- Wheels generation-->
+    <xacro:wheel name="rear_right" x="-0.055" y="-0.0755" z="-0.014"/>
+    <xacro:wheel name="rear_left" x="-0.055" y="0.0755" z="-0.014"/>
+    <xacro:wheel name="front_right" x="0.055" y="-0.0755" z="-0.014"/>
+    <xacro:wheel name="front_left" x="0.055" y="0.0755" z="-0.014"/>
+
+    
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
+
+
+</robot>

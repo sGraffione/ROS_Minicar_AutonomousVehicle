@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<launch>
+
+    <param name="robot_description" command="xacro '$(find minicar)/urdf/steerModelSimple.urdf.xacro'"/>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/> 
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"/>
+
+    <!-- Gazebo settings and spawn of the robot -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="false" />
+        <arg name="use_sim_time" value="true" />
+        <arg name="gui" value="true" />
+        <arg name="headless" value="false" />
+        <arg name="debug" value="false" />
+    </include>
+    <node pkg="gazebo_ros" type="spawn_model" name="spawning_urdf" args="-urdf -model minicar -param robot_description"/>
+
+    <!-- load yaml files required to the controllers-->
+    <rosparam command="load"
+            file="$(find minicar)/config/drivingWheels.yaml"
+            ns="minicar_driving_controller" />
+    <rosparam command="load"
+            file="$(find minicar)/config/steeringWheels.yaml"
+            ns="minicar_steer_controller" />
+
+    <node pkg="controller_manager" type="spawner" name="minicar_controller_spawner"
+            args="minicar_steer_controller
+                    minicar_driving_controller" />
+                    
+    <!--<node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering" >
+        <param name="default_topic" value="/minicar_driving_controller/cmd_vel"/>        
+    </node>-->
+    
+    <node name="controller" pkg="minicar" type="controller" output="screen">
+        <param name="q1" type="double" value="10.0"/>
+        <param name="q2" type="double" value="10.0"/>
+        <param name="q3" type="double" value="1"/>
+        <param name="q4" type="double" value="1"/>
+        <param name="q5" type="double" value="1"/>
+        <param name="r1" type="double" value="1.0"/>
+        <param name="r2" type="double" value="0.05"/>
+    </node>
+    
+    
+</launch>

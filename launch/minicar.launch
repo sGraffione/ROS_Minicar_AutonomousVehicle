@@ -3,14 +3,11 @@
 	<node pkg="minicar" name="controller" type="controller">
         <param name="q1" type="double" value="10.0"/>
         <param name="q2" type="double" value="10.0"/>
-        <param name="q3" type="double" value="0.001"/>
+        <param name="q3" type="double" value="1"/>
         <param name="r1" type="double" value="1.0"/>
-        <param name="r2" type="double" value="1.0"/>
+        <param name="r2" type="double" value="0.05"/>
 	</node>
     
-    <node pkg="minicar" name="motorManager" type="motorManager.py" output="screen">
-    </node>
-    
-    <node pkg="minicar" name="btsSensors" type="localization">
-    </node>
+    <node pkg="minicar" name="motorManager" type="motorManager.py" output="screen"/>
+    <node pkg="minicar" name="btsSensors" type="localization" />
 </launch>
