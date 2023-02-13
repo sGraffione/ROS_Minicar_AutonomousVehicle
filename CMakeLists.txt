@@ -115,6 +115,7 @@ catkin_package(
   CATKIN_DEPENDS
 	roscpp
 	std_msgs
+  nav_msgs
 	message_runtime
   DEPENDS
 	EIGEN3
@@ -215,11 +216,10 @@ catkin_install_python(PROGRAMS scripts/motorManager.py scripts/laneDetection.py
 # )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
-# install(FILES
-#   # myfile1
-#   # myfile2
-#   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-# )
+install(DIRECTORY config launch urdf
+ # myfile2
+ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
 
 #############
 ## Testing ##

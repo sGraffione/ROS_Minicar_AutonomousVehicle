@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rospy
+import numpy as np
 from std_msgs.msg import String
 from minicar.msg import Motors
 import RPi.GPIO as GPIO
@@ -14,10 +15,14 @@ IN4 = 22
 ENA = 0
 ENB = 1
 
+MAX_DELTA = 30*180/np.PI
+MAX_DUTY_CYCLE = 4000
+MAX_SPEED = 0.3
+
 pwm = Adafruit_PCA9685.PCA9685()
 pwm.set_pwm_freq(60)
 kit = ServoKit(channels=16)
-CENTER = 89;
+CENTER = 89
 kit.servo[15].set_pulse_width_range(400,2100)
 
 GPIO.setmode(GPIO.BCM)
@@ -42,24 +47,23 @@ def setBackward():
 
 def callback(data):
 	rospy.loginfo("[%s %s]\n", data.throttle,data.steering)
+	th = data.throttle*MAX_DUTY_CYCLE/MAX_SPEED
 	if data.throttle >= 0:
 		setForward()
 	else:
 		setBackward()
-	if data.throttle >= 4000:
-		th = 4000
-	elif data.throttle <= -4000:
-		th = 4000;
-	else:
-		th = data.throttle
+	if th >= MAX_DUTY_CYCLE:
+		th = MAX_DUTY_CYCLE
+	elif data.throttle <= -MAX_DUTY_CYCLE:
+		th = MAX_DUTY_CYCLE
 
-	if data.steering > 30:
-		steer = 30
-	elif data.steering < -30:
-		steer = -30
-	else:
-		steer = data.steering
-	pwm.set_pwm(ENA,0,int(th))	
+	steer = data.steering*180/np.pi
+	if steer > MAX_DELTA:
+		steer = MAX_DELTA
+	elif steer < -MAX_DELTA:
+		steer = -MAX_DELTA
+
+	pwm.set_pwm(ENA,0,int(th))
 	pwm.set_pwm(ENB,0,int(th))
 	kit.servo[15].angle = CENTER-steer
     
