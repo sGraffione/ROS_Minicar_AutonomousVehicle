@@ -1,0 +1,1576 @@
+In archive lib_linux/libpca9685.a:
+
+pca9685servo.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <PCA9685Servo::PCA9685Servo(unsigned char)>:
+   0:	b580      	push	{r7, lr}
+   2:	b082      	sub	sp, #8
+   4:	af00      	add	r7, sp, #0
+   6:	6078      	str	r0, [r7, #4]
+   8:	460b      	mov	r3, r1
+   a:	70fb      	strb	r3, [r7, #3]
+   c:	687b      	ldr	r3, [r7, #4]
+   e:	78fa      	ldrb	r2, [r7, #3]
+  10:	4611      	mov	r1, r2
+  12:	4618      	mov	r0, r3
+  14:	f7ff fffe 	bl	0 <PCA9685::PCA9685(unsigned char)>
+  18:	687b      	ldr	r3, [r7, #4]
+  1a:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+  1e:	805a      	strh	r2, [r3, #2]
+  20:	687b      	ldr	r3, [r7, #4]
+  22:	f44f 62fa 	mov.w	r2, #2000	; 0x7d0
+  26:	809a      	strh	r2, [r3, #4]
+  28:	687b      	ldr	r3, [r7, #4]
+  2a:	f240 52dc 	movw	r2, #1500	; 0x5dc
+  2e:	80da      	strh	r2, [r3, #6]
+  30:	687b      	ldr	r3, [r7, #4]
+  32:	2100      	movs	r1, #0
+  34:	4618      	mov	r0, r3
+  36:	f7ff fffe 	bl	0 <PCA9685::SetInvert(bool)>
+  3a:	687b      	ldr	r3, [r7, #4]
+  3c:	2101      	movs	r1, #1
+  3e:	4618      	mov	r0, r3
+  40:	f7ff fffe 	bl	0 <PCA9685::SetOutDriver(bool)>
+  44:	687b      	ldr	r3, [r7, #4]
+  46:	2132      	movs	r1, #50	; 0x32
+  48:	4618      	mov	r0, r3
+  4a:	f7ff fffe 	bl	0 <PCA9685::SetFrequency(unsigned short)>
+  4e:	6878      	ldr	r0, [r7, #4]
+  50:	f7ff fffe 	bl	112 <PCA9685Servo::CalcLeftCount()>
+  54:	6878      	ldr	r0, [r7, #4]
+  56:	f7ff fffe 	bl	160 <PCA9685Servo::CalcRightCount()>
+  5a:	6878      	ldr	r0, [r7, #4]
+  5c:	f7ff fffe 	bl	1b0 <PCA9685Servo::CalcCenterCount()>
+  60:	687b      	ldr	r3, [r7, #4]
+  62:	4618      	mov	r0, r3
+  64:	3708      	adds	r7, #8
+  66:	46bd      	mov	sp, r7
+  68:	bd80      	pop	{r7, pc}
+
+0000006a <PCA9685Servo::SetLeftUs(unsigned short)>:
+  6a:	b580      	push	{r7, lr}
+  6c:	b082      	sub	sp, #8
+  6e:	af00      	add	r7, sp, #0
+  70:	6078      	str	r0, [r7, #4]
+  72:	460b      	mov	r3, r1
+  74:	807b      	strh	r3, [r7, #2]
+  76:	687b      	ldr	r3, [r7, #4]
+  78:	887a      	ldrh	r2, [r7, #2]
+  7a:	805a      	strh	r2, [r3, #2]
+  7c:	6878      	ldr	r0, [r7, #4]
+  7e:	f7ff fffe 	bl	112 <PCA9685Servo::CalcLeftCount()>
+  82:	bf00      	nop
+  84:	3708      	adds	r7, #8
+  86:	46bd      	mov	sp, r7
+  88:	bd80      	pop	{r7, pc}
+
+0000008a <PCA9685Servo::GetLeftUs() const>:
+  8a:	b480      	push	{r7}
+  8c:	b083      	sub	sp, #12
+  8e:	af00      	add	r7, sp, #0
+  90:	6078      	str	r0, [r7, #4]
+  92:	687b      	ldr	r3, [r7, #4]
+  94:	885b      	ldrh	r3, [r3, #2]
+  96:	4618      	mov	r0, r3
+  98:	370c      	adds	r7, #12
+  9a:	46bd      	mov	sp, r7
+  9c:	f85d 7b04 	ldr.w	r7, [sp], #4
+  a0:	4770      	bx	lr
+
+000000a2 <PCA9685Servo::SetRightUs(unsigned short)>:
+  a2:	b580      	push	{r7, lr}
+  a4:	b082      	sub	sp, #8
+  a6:	af00      	add	r7, sp, #0
+  a8:	6078      	str	r0, [r7, #4]
+  aa:	460b      	mov	r3, r1
+  ac:	807b      	strh	r3, [r7, #2]
+  ae:	687b      	ldr	r3, [r7, #4]
+  b0:	887a      	ldrh	r2, [r7, #2]
+  b2:	809a      	strh	r2, [r3, #4]
+  b4:	6878      	ldr	r0, [r7, #4]
+  b6:	f7ff fffe 	bl	160 <PCA9685Servo::CalcRightCount()>
+  ba:	bf00      	nop
+  bc:	3708      	adds	r7, #8
+  be:	46bd      	mov	sp, r7
+  c0:	bd80      	pop	{r7, pc}
+
+000000c2 <PCA9685Servo::GetRightUs() const>:
+  c2:	b480      	push	{r7}
+  c4:	b083      	sub	sp, #12
+  c6:	af00      	add	r7, sp, #0
+  c8:	6078      	str	r0, [r7, #4]
+  ca:	687b      	ldr	r3, [r7, #4]
+  cc:	889b      	ldrh	r3, [r3, #4]
+  ce:	4618      	mov	r0, r3
+  d0:	370c      	adds	r7, #12
+  d2:	46bd      	mov	sp, r7
+  d4:	f85d 7b04 	ldr.w	r7, [sp], #4
+  d8:	4770      	bx	lr
+
+000000da <PCA9685Servo::SetCenterUs(unsigned short)>:
+  da:	b580      	push	{r7, lr}
+  dc:	b082      	sub	sp, #8
+  de:	af00      	add	r7, sp, #0
+  e0:	6078      	str	r0, [r7, #4]
+  e2:	460b      	mov	r3, r1
+  e4:	807b      	strh	r3, [r7, #2]
+  e6:	687b      	ldr	r3, [r7, #4]
+  e8:	887a      	ldrh	r2, [r7, #2]
+  ea:	80da      	strh	r2, [r3, #6]
+  ec:	6878      	ldr	r0, [r7, #4]
+  ee:	f7ff fffe 	bl	1b0 <PCA9685Servo::CalcCenterCount()>
+  f2:	bf00      	nop
+  f4:	3708      	adds	r7, #8
+  f6:	46bd      	mov	sp, r7
+  f8:	bd80      	pop	{r7, pc}
+
+000000fa <PCA9685Servo::GetCenterUs() const>:
+  fa:	b480      	push	{r7}
+  fc:	b083      	sub	sp, #12
+  fe:	af00      	add	r7, sp, #0
+ 100:	6078      	str	r0, [r7, #4]
+ 102:	687b      	ldr	r3, [r7, #4]
+ 104:	88db      	ldrh	r3, [r3, #6]
+ 106:	4618      	mov	r0, r3
+ 108:	370c      	adds	r7, #12
+ 10a:	46bd      	mov	sp, r7
+ 10c:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 110:	4770      	bx	lr
+
+00000112 <PCA9685Servo::CalcLeftCount()>:
+ 112:	b480      	push	{r7}
+ 114:	b083      	sub	sp, #12
+ 116:	af00      	add	r7, sp, #0
+ 118:	6078      	str	r0, [r7, #4]
+ 11a:	687b      	ldr	r3, [r7, #4]
+ 11c:	885b      	ldrh	r3, [r3, #2]
+ 11e:	ee07 3a90 	vmov	s15, r3
+ 122:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 126:	ed9f 7a0c 	vldr	s14, [pc, #48]	; 158 <PCA9685Servo::CalcLeftCount()+0x46>
+ 12a:	ee27 7a87 	vmul.f32	s14, s15, s14
+ 12e:	eddf 6a0b 	vldr	s13, [pc, #44]	; 15c <PCA9685Servo::CalcLeftCount()+0x4a>
+ 132:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 136:	eeb6 7a00 	vmov.f32	s14, #96	; 0x3f000000  0.5
+ 13a:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 13e:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 142:	ee17 3a90 	vmov	r3, s15
+ 146:	b29a      	uxth	r2, r3
+ 148:	687b      	ldr	r3, [r7, #4]
+ 14a:	811a      	strh	r2, [r3, #8]
+ 14c:	bf00      	nop
+ 14e:	370c      	adds	r7, #12
+ 150:	46bd      	mov	sp, r7
+ 152:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 156:	4770      	bx	lr
+ 158:	434ccccd 	.word	0x434ccccd
+ 15c:	447a0000 	.word	0x447a0000
+
+00000160 <PCA9685Servo::CalcRightCount()>:
+ 160:	b480      	push	{r7}
+ 162:	b083      	sub	sp, #12
+ 164:	af00      	add	r7, sp, #0
+ 166:	6078      	str	r0, [r7, #4]
+ 168:	687b      	ldr	r3, [r7, #4]
+ 16a:	889b      	ldrh	r3, [r3, #4]
+ 16c:	ee07 3a90 	vmov	s15, r3
+ 170:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 174:	ed9f 7a0c 	vldr	s14, [pc, #48]	; 1a8 <PCA9685Servo::CalcRightCount()+0x48>
+ 178:	ee27 7a87 	vmul.f32	s14, s15, s14
+ 17c:	eddf 6a0b 	vldr	s13, [pc, #44]	; 1ac <PCA9685Servo::CalcRightCount()+0x4c>
+ 180:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 184:	eeb6 7a00 	vmov.f32	s14, #96	; 0x3f000000  0.5
+ 188:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 18c:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 190:	ee17 3a90 	vmov	r3, s15
+ 194:	b29a      	uxth	r2, r3
+ 196:	687b      	ldr	r3, [r7, #4]
+ 198:	815a      	strh	r2, [r3, #10]
+ 19a:	bf00      	nop
+ 19c:	370c      	adds	r7, #12
+ 19e:	46bd      	mov	sp, r7
+ 1a0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 1a4:	4770      	bx	lr
+ 1a6:	bf00      	nop
+ 1a8:	434ccccd 	.word	0x434ccccd
+ 1ac:	447a0000 	.word	0x447a0000
+
+000001b0 <PCA9685Servo::CalcCenterCount()>:
+ 1b0:	b480      	push	{r7}
+ 1b2:	b083      	sub	sp, #12
+ 1b4:	af00      	add	r7, sp, #0
+ 1b6:	6078      	str	r0, [r7, #4]
+ 1b8:	687b      	ldr	r3, [r7, #4]
+ 1ba:	88db      	ldrh	r3, [r3, #6]
+ 1bc:	ee07 3a90 	vmov	s15, r3
+ 1c0:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 1c4:	ed9f 7a0c 	vldr	s14, [pc, #48]	; 1f8 <PCA9685Servo::CalcCenterCount()+0x48>
+ 1c8:	ee27 7a87 	vmul.f32	s14, s15, s14
+ 1cc:	eddf 6a0b 	vldr	s13, [pc, #44]	; 1fc <PCA9685Servo::CalcCenterCount()+0x4c>
+ 1d0:	eec7 7a26 	vdiv.f32	s15, s14, s13
+ 1d4:	eeb6 7a00 	vmov.f32	s14, #96	; 0x3f000000  0.5
+ 1d8:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 1dc:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 1e0:	ee17 3a90 	vmov	r3, s15
+ 1e4:	b29a      	uxth	r2, r3
+ 1e6:	687b      	ldr	r3, [r7, #4]
+ 1e8:	819a      	strh	r2, [r3, #12]
+ 1ea:	bf00      	nop
+ 1ec:	370c      	adds	r7, #12
+ 1ee:	46bd      	mov	sp, r7
+ 1f0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 1f4:	4770      	bx	lr
+ 1f6:	bf00      	nop
+ 1f8:	434ccccd 	.word	0x434ccccd
+ 1fc:	447a0000 	.word	0x447a0000
+
+00000200 <PCA9685Servo::Set(unsigned char, unsigned short)>:
+ 200:	b580      	push	{r7, lr}
+ 202:	b082      	sub	sp, #8
+ 204:	af00      	add	r7, sp, #0
+ 206:	6078      	str	r0, [r7, #4]
+ 208:	460b      	mov	r3, r1
+ 20a:	70fb      	strb	r3, [r7, #3]
+ 20c:	4613      	mov	r3, r2
+ 20e:	803b      	strh	r3, [r7, #0]
+ 210:	687b      	ldr	r3, [r7, #4]
+ 212:	895b      	ldrh	r3, [r3, #10]
+ 214:	883a      	ldrh	r2, [r7, #0]
+ 216:	429a      	cmp	r2, r3
+ 218:	d903      	bls.n	222 <PCA9685Servo::Set(unsigned char, unsigned short)+0x22>
+ 21a:	687b      	ldr	r3, [r7, #4]
+ 21c:	895b      	ldrh	r3, [r3, #10]
+ 21e:	803b      	strh	r3, [r7, #0]
+ 220:	e007      	b.n	232 <PCA9685Servo::Set(unsigned char, unsigned short)+0x32>
+ 222:	687b      	ldr	r3, [r7, #4]
+ 224:	891b      	ldrh	r3, [r3, #8]
+ 226:	883a      	ldrh	r2, [r7, #0]
+ 228:	429a      	cmp	r2, r3
+ 22a:	d202      	bcs.n	232 <PCA9685Servo::Set(unsigned char, unsigned short)+0x32>
+ 22c:	687b      	ldr	r3, [r7, #4]
+ 22e:	891b      	ldrh	r3, [r3, #8]
+ 230:	803b      	strh	r3, [r7, #0]
+ 232:	687b      	ldr	r3, [r7, #4]
+ 234:	883a      	ldrh	r2, [r7, #0]
+ 236:	78f9      	ldrb	r1, [r7, #3]
+ 238:	4618      	mov	r0, r3
+ 23a:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 23e:	bf00      	nop
+ 240:	3708      	adds	r7, #8
+ 242:	46bd      	mov	sp, r7
+ 244:	bd80      	pop	{r7, pc}
+
+00000246 <PCA9685Servo::Set(unsigned char, unsigned char)>:
+ 246:	b580      	push	{r7, lr}
+ 248:	b084      	sub	sp, #16
+ 24a:	af00      	add	r7, sp, #0
+ 24c:	6078      	str	r0, [r7, #4]
+ 24e:	460b      	mov	r3, r1
+ 250:	70fb      	strb	r3, [r7, #3]
+ 252:	4613      	mov	r3, r2
+ 254:	70bb      	strb	r3, [r7, #2]
+ 256:	78bb      	ldrb	r3, [r7, #2]
+ 258:	2b00      	cmp	r3, #0
+ 25a:	d107      	bne.n	26c <PCA9685Servo::Set(unsigned char, unsigned char)+0x26>
+ 25c:	6878      	ldr	r0, [r7, #4]
+ 25e:	687b      	ldr	r3, [r7, #4]
+ 260:	891a      	ldrh	r2, [r3, #8]
+ 262:	78fb      	ldrb	r3, [r7, #3]
+ 264:	4619      	mov	r1, r3
+ 266:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 26a:	e041      	b.n	2f0 <PCA9685Servo::Set(unsigned char, unsigned char)+0xaa>
+ 26c:	78bb      	ldrb	r3, [r7, #2]
+ 26e:	2b80      	cmp	r3, #128	; 0x80
+ 270:	d107      	bne.n	282 <PCA9685Servo::Set(unsigned char, unsigned char)+0x3c>
+ 272:	6878      	ldr	r0, [r7, #4]
+ 274:	687b      	ldr	r3, [r7, #4]
+ 276:	899a      	ldrh	r2, [r3, #12]
+ 278:	78fb      	ldrb	r3, [r7, #3]
+ 27a:	4619      	mov	r1, r3
+ 27c:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 280:	e036      	b.n	2f0 <PCA9685Servo::Set(unsigned char, unsigned char)+0xaa>
+ 282:	78bb      	ldrb	r3, [r7, #2]
+ 284:	2bff      	cmp	r3, #255	; 0xff
+ 286:	d107      	bne.n	298 <PCA9685Servo::Set(unsigned char, unsigned char)+0x52>
+ 288:	6878      	ldr	r0, [r7, #4]
+ 28a:	687b      	ldr	r3, [r7, #4]
+ 28c:	895a      	ldrh	r2, [r3, #10]
+ 28e:	78fb      	ldrb	r3, [r7, #3]
+ 290:	4619      	mov	r1, r3
+ 292:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 296:	e02b      	b.n	2f0 <PCA9685Servo::Set(unsigned char, unsigned char)+0xaa>
+ 298:	687b      	ldr	r3, [r7, #4]
+ 29a:	891b      	ldrh	r3, [r3, #8]
+ 29c:	ee07 3a90 	vmov	s15, r3
+ 2a0:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 2a4:	687b      	ldr	r3, [r7, #4]
+ 2a6:	895b      	ldrh	r3, [r3, #10]
+ 2a8:	461a      	mov	r2, r3
+ 2aa:	687b      	ldr	r3, [r7, #4]
+ 2ac:	891b      	ldrh	r3, [r3, #8]
+ 2ae:	1ad3      	subs	r3, r2, r3
+ 2b0:	ee07 3a90 	vmov	s15, r3
+ 2b4:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 2b8:	ed9f 6a0f 	vldr	s12, [pc, #60]	; 2f8 <PCA9685Servo::Set(unsigned char, unsigned char)+0xb2>
+ 2bc:	eec7 6a86 	vdiv.f32	s13, s15, s12
+ 2c0:	78bb      	ldrb	r3, [r7, #2]
+ 2c2:	ee07 3a90 	vmov	s15, r3
+ 2c6:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 2ca:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 2ce:	eef6 6a00 	vmov.f32	s13, #96	; 0x3f000000  0.5
+ 2d2:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 2d6:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 2da:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 2de:	ee17 3a90 	vmov	r3, s15
+ 2e2:	81fb      	strh	r3, [r7, #14]
+ 2e4:	687b      	ldr	r3, [r7, #4]
+ 2e6:	89fa      	ldrh	r2, [r7, #14]
+ 2e8:	78f9      	ldrb	r1, [r7, #3]
+ 2ea:	4618      	mov	r0, r3
+ 2ec:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 2f0:	bf00      	nop
+ 2f2:	3710      	adds	r7, #16
+ 2f4:	46bd      	mov	sp, r7
+ 2f6:	bd80      	pop	{r7, pc}
+ 2f8:	437f0000 	.word	0x437f0000
+
+000002fc <PCA9685Servo::SetAngle(unsigned char, unsigned char)>:
+ 2fc:	b580      	push	{r7, lr}
+ 2fe:	b084      	sub	sp, #16
+ 300:	af00      	add	r7, sp, #0
+ 302:	6078      	str	r0, [r7, #4]
+ 304:	460b      	mov	r3, r1
+ 306:	70fb      	strb	r3, [r7, #3]
+ 308:	4613      	mov	r3, r2
+ 30a:	70bb      	strb	r3, [r7, #2]
+ 30c:	78bb      	ldrb	r3, [r7, #2]
+ 30e:	2b00      	cmp	r3, #0
+ 310:	d107      	bne.n	322 <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x26>
+ 312:	6878      	ldr	r0, [r7, #4]
+ 314:	687b      	ldr	r3, [r7, #4]
+ 316:	891a      	ldrh	r2, [r3, #8]
+ 318:	78fb      	ldrb	r3, [r7, #3]
+ 31a:	4619      	mov	r1, r3
+ 31c:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 320:	e07b      	b.n	41a <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x11e>
+ 322:	78bb      	ldrb	r3, [r7, #2]
+ 324:	2b5a      	cmp	r3, #90	; 0x5a
+ 326:	d107      	bne.n	338 <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x3c>
+ 328:	6878      	ldr	r0, [r7, #4]
+ 32a:	687b      	ldr	r3, [r7, #4]
+ 32c:	899a      	ldrh	r2, [r3, #12]
+ 32e:	78fb      	ldrb	r3, [r7, #3]
+ 330:	4619      	mov	r1, r3
+ 332:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 336:	e070      	b.n	41a <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x11e>
+ 338:	78bb      	ldrb	r3, [r7, #2]
+ 33a:	2bb3      	cmp	r3, #179	; 0xb3
+ 33c:	d907      	bls.n	34e <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x52>
+ 33e:	6878      	ldr	r0, [r7, #4]
+ 340:	687b      	ldr	r3, [r7, #4]
+ 342:	895a      	ldrh	r2, [r3, #10]
+ 344:	78fb      	ldrb	r3, [r7, #3]
+ 346:	4619      	mov	r1, r3
+ 348:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 34c:	e065      	b.n	41a <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x11e>
+ 34e:	78bb      	ldrb	r3, [r7, #2]
+ 350:	2b59      	cmp	r3, #89	; 0x59
+ 352:	d82c      	bhi.n	3ae <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0xb2>
+ 354:	687b      	ldr	r3, [r7, #4]
+ 356:	891b      	ldrh	r3, [r3, #8]
+ 358:	ee07 3a90 	vmov	s15, r3
+ 35c:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 360:	687b      	ldr	r3, [r7, #4]
+ 362:	899b      	ldrh	r3, [r3, #12]
+ 364:	461a      	mov	r2, r3
+ 366:	687b      	ldr	r3, [r7, #4]
+ 368:	891b      	ldrh	r3, [r3, #8]
+ 36a:	1ad3      	subs	r3, r2, r3
+ 36c:	ee07 3a90 	vmov	s15, r3
+ 370:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 374:	ed9f 6a2b 	vldr	s12, [pc, #172]	; 424 <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x128>
+ 378:	eec7 6a86 	vdiv.f32	s13, s15, s12
+ 37c:	78bb      	ldrb	r3, [r7, #2]
+ 37e:	ee07 3a90 	vmov	s15, r3
+ 382:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 386:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 38a:	eef6 6a00 	vmov.f32	s13, #96	; 0x3f000000  0.5
+ 38e:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 392:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 396:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 39a:	ee17 3a90 	vmov	r3, s15
+ 39e:	81fb      	strh	r3, [r7, #14]
+ 3a0:	687b      	ldr	r3, [r7, #4]
+ 3a2:	89fa      	ldrh	r2, [r7, #14]
+ 3a4:	78f9      	ldrb	r1, [r7, #3]
+ 3a6:	4618      	mov	r0, r3
+ 3a8:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 3ac:	e035      	b.n	41a <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x11e>
+ 3ae:	687b      	ldr	r3, [r7, #4]
+ 3b0:	899b      	ldrh	r3, [r3, #12]
+ 3b2:	ee07 3a90 	vmov	s15, r3
+ 3b6:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 3ba:	ee37 7aa7 	vadd.f32	s14, s15, s15
+ 3be:	687b      	ldr	r3, [r7, #4]
+ 3c0:	895b      	ldrh	r3, [r3, #10]
+ 3c2:	ee07 3a90 	vmov	s15, r3
+ 3c6:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 3ca:	ee37 7a67 	vsub.f32	s14, s14, s15
+ 3ce:	687b      	ldr	r3, [r7, #4]
+ 3d0:	895b      	ldrh	r3, [r3, #10]
+ 3d2:	461a      	mov	r2, r3
+ 3d4:	687b      	ldr	r3, [r7, #4]
+ 3d6:	899b      	ldrh	r3, [r3, #12]
+ 3d8:	1ad3      	subs	r3, r2, r3
+ 3da:	ee07 3a90 	vmov	s15, r3
+ 3de:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 3e2:	ed9f 6a10 	vldr	s12, [pc, #64]	; 424 <PCA9685Servo::SetAngle(unsigned char, unsigned char)+0x128>
+ 3e6:	eec7 6a86 	vdiv.f32	s13, s15, s12
+ 3ea:	78bb      	ldrb	r3, [r7, #2]
+ 3ec:	ee07 3a90 	vmov	s15, r3
+ 3f0:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 3f4:	ee66 7aa7 	vmul.f32	s15, s13, s15
+ 3f8:	eef6 6a00 	vmov.f32	s13, #96	; 0x3f000000  0.5
+ 3fc:	ee77 7aa6 	vadd.f32	s15, s15, s13
+ 400:	ee77 7a27 	vadd.f32	s15, s14, s15
+ 404:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 408:	ee17 3a90 	vmov	r3, s15
+ 40c:	81bb      	strh	r3, [r7, #12]
+ 40e:	687b      	ldr	r3, [r7, #4]
+ 410:	89ba      	ldrh	r2, [r7, #12]
+ 412:	78f9      	ldrb	r1, [r7, #3]
+ 414:	4618      	mov	r0, r3
+ 416:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+ 41a:	bf00      	nop
+ 41c:	3710      	adds	r7, #16
+ 41e:	46bd      	mov	sp, r7
+ 420:	bd80      	pop	{r7, pc}
+ 422:	bf00      	nop
+ 424:	42b40000 	.word	0x42b40000
+
+pca9685pwmled.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <PCA9685PWMLed::PCA9685PWMLed(unsigned char)>:
+   0:	b580      	push	{r7, lr}
+   2:	b082      	sub	sp, #8
+   4:	af00      	add	r7, sp, #0
+   6:	6078      	str	r0, [r7, #4]
+   8:	460b      	mov	r3, r1
+   a:	70fb      	strb	r3, [r7, #3]
+   c:	687b      	ldr	r3, [r7, #4]
+   e:	78fa      	ldrb	r2, [r7, #3]
+  10:	4611      	mov	r1, r2
+  12:	4618      	mov	r0, r3
+  14:	f7ff fffe 	bl	0 <PCA9685::PCA9685(unsigned char)>
+  18:	687b      	ldr	r3, [r7, #4]
+  1a:	2178      	movs	r1, #120	; 0x78
+  1c:	4618      	mov	r0, r3
+  1e:	f7ff fffe 	bl	0 <PCA9685::SetFrequency(unsigned short)>
+  22:	687b      	ldr	r3, [r7, #4]
+  24:	4618      	mov	r0, r3
+  26:	3708      	adds	r7, #8
+  28:	46bd      	mov	sp, r7
+  2a:	bd80      	pop	{r7, pc}
+
+0000002c <PCA9685PWMLed::Set(unsigned char, unsigned short)>:
+  2c:	b580      	push	{r7, lr}
+  2e:	b082      	sub	sp, #8
+  30:	af00      	add	r7, sp, #0
+  32:	6078      	str	r0, [r7, #4]
+  34:	460b      	mov	r3, r1
+  36:	70fb      	strb	r3, [r7, #3]
+  38:	4613      	mov	r3, r2
+  3a:	803b      	strh	r3, [r7, #0]
+  3c:	883b      	ldrh	r3, [r7, #0]
+  3e:	f640 72fe 	movw	r2, #4094	; 0xffe
+  42:	4293      	cmp	r3, r2
+  44:	d906      	bls.n	54 <PCA9685PWMLed::Set(unsigned char, unsigned short)+0x28>
+  46:	687b      	ldr	r3, [r7, #4]
+  48:	78f9      	ldrb	r1, [r7, #3]
+  4a:	2201      	movs	r2, #1
+  4c:	4618      	mov	r0, r3
+  4e:	f7ff fffe 	bl	0 <PCA9685::SetFullOn(unsigned char, bool)>
+  52:	e00f      	b.n	74 <PCA9685PWMLed::Set(unsigned char, unsigned short)+0x48>
+  54:	883b      	ldrh	r3, [r7, #0]
+  56:	2b00      	cmp	r3, #0
+  58:	d106      	bne.n	68 <PCA9685PWMLed::Set(unsigned char, unsigned short)+0x3c>
+  5a:	687b      	ldr	r3, [r7, #4]
+  5c:	78f9      	ldrb	r1, [r7, #3]
+  5e:	2201      	movs	r2, #1
+  60:	4618      	mov	r0, r3
+  62:	f7ff fffe 	bl	0 <PCA9685::SetFullOff(unsigned char, bool)>
+  66:	e005      	b.n	74 <PCA9685PWMLed::Set(unsigned char, unsigned short)+0x48>
+  68:	687b      	ldr	r3, [r7, #4]
+  6a:	883a      	ldrh	r2, [r7, #0]
+  6c:	78f9      	ldrb	r1, [r7, #3]
+  6e:	4618      	mov	r0, r3
+  70:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+  74:	bf00      	nop
+  76:	3708      	adds	r7, #8
+  78:	46bd      	mov	sp, r7
+  7a:	bd80      	pop	{r7, pc}
+
+0000007c <PCA9685PWMLed::Set(unsigned char, unsigned char)>:
+  7c:	b580      	push	{r7, lr}
+  7e:	b084      	sub	sp, #16
+  80:	af00      	add	r7, sp, #0
+  82:	6078      	str	r0, [r7, #4]
+  84:	460b      	mov	r3, r1
+  86:	70fb      	strb	r3, [r7, #3]
+  88:	4613      	mov	r3, r2
+  8a:	70bb      	strb	r3, [r7, #2]
+  8c:	78bb      	ldrb	r3, [r7, #2]
+  8e:	2bff      	cmp	r3, #255	; 0xff
+  90:	d106      	bne.n	a0 <PCA9685PWMLed::Set(unsigned char, unsigned char)+0x24>
+  92:	687b      	ldr	r3, [r7, #4]
+  94:	78f9      	ldrb	r1, [r7, #3]
+  96:	2201      	movs	r2, #1
+  98:	4618      	mov	r0, r3
+  9a:	f7ff fffe 	bl	0 <PCA9685::SetFullOn(unsigned char, bool)>
+  9e:	e018      	b.n	d2 <PCA9685PWMLed::Set(unsigned char, unsigned char)+0x56>
+  a0:	78bb      	ldrb	r3, [r7, #2]
+  a2:	2b00      	cmp	r3, #0
+  a4:	d106      	bne.n	b4 <PCA9685PWMLed::Set(unsigned char, unsigned char)+0x38>
+  a6:	687b      	ldr	r3, [r7, #4]
+  a8:	78f9      	ldrb	r1, [r7, #3]
+  aa:	2201      	movs	r2, #1
+  ac:	4618      	mov	r0, r3
+  ae:	f7ff fffe 	bl	0 <PCA9685::SetFullOff(unsigned char, bool)>
+  b2:	e00e      	b.n	d2 <PCA9685PWMLed::Set(unsigned char, unsigned char)+0x56>
+  b4:	78bb      	ldrb	r3, [r7, #2]
+  b6:	011b      	lsls	r3, r3, #4
+  b8:	b21a      	sxth	r2, r3
+  ba:	78bb      	ldrb	r3, [r7, #2]
+  bc:	111b      	asrs	r3, r3, #4
+  be:	b21b      	sxth	r3, r3
+  c0:	4313      	orrs	r3, r2
+  c2:	b21b      	sxth	r3, r3
+  c4:	81fb      	strh	r3, [r7, #14]
+  c6:	687b      	ldr	r3, [r7, #4]
+  c8:	89fa      	ldrh	r2, [r7, #14]
+  ca:	78f9      	ldrb	r1, [r7, #3]
+  cc:	4618      	mov	r0, r3
+  ce:	f7ff fffe 	bl	0 <PCA9685::Write(unsigned char, unsigned short)>
+  d2:	bf00      	nop
+  d4:	3710      	adds	r7, #16
+  d6:	46bd      	mov	sp, r7
+  d8:	bd80      	pop	{r7, pc}
+
+pca9685.o:     file format elf32-littlearm
+
+
+Disassembly of section .text:
+
+00000000 <PCA9685::PCA9685(unsigned char)>:
+   0:	b580      	push	{r7, lr}
+   2:	b084      	sub	sp, #16
+   4:	af00      	add	r7, sp, #0
+   6:	6078      	str	r0, [r7, #4]
+   8:	460b      	mov	r3, r1
+   a:	70fb      	strb	r3, [r7, #3]
+   c:	687b      	ldr	r3, [r7, #4]
+   e:	78fa      	ldrb	r2, [r7, #3]
+  10:	701a      	strb	r2, [r3, #0]
+  12:	f7ff fffe 	bl	0 <bcm2835_i2c_begin>
+  16:	2101      	movs	r1, #1
+  18:	6878      	ldr	r0, [r7, #4]
+  1a:	f7ff fffe 	bl	5ec <PCA9685::AutoIncrement(bool)>
+  1e:	2300      	movs	r3, #0
+  20:	73fb      	strb	r3, [r7, #15]
+  22:	7bfb      	ldrb	r3, [r7, #15]
+  24:	2b0f      	cmp	r3, #15
+  26:	d80a      	bhi.n	3e <PCA9685::PCA9685(unsigned char)+0x3e>
+  28:	7bf9      	ldrb	r1, [r7, #15]
+  2a:	f44f 5380 	mov.w	r3, #4096	; 0x1000
+  2e:	2200      	movs	r2, #0
+  30:	6878      	ldr	r0, [r7, #4]
+  32:	f7ff fffe 	bl	288 <PCA9685::Write(unsigned char, unsigned short, unsigned short)>
+  36:	7bfb      	ldrb	r3, [r7, #15]
+  38:	3301      	adds	r3, #1
+  3a:	73fb      	strb	r3, [r7, #15]
+  3c:	e7f1      	b.n	22 <PCA9685::PCA9685(unsigned char)+0x22>
+  3e:	2100      	movs	r1, #0
+  40:	6878      	ldr	r0, [r7, #4]
+  42:	f7ff fffe 	bl	50 <PCA9685::Sleep(bool)>
+  46:	687b      	ldr	r3, [r7, #4]
+  48:	4618      	mov	r0, r3
+  4a:	3710      	adds	r7, #16
+  4c:	46bd      	mov	sp, r7
+  4e:	bd80      	pop	{r7, pc}
+
+00000050 <PCA9685::Sleep(bool)>:
+  50:	b580      	push	{r7, lr}
+  52:	b084      	sub	sp, #16
+  54:	af00      	add	r7, sp, #0
+  56:	6078      	str	r0, [r7, #4]
+  58:	460b      	mov	r3, r1
+  5a:	70fb      	strb	r3, [r7, #3]
+  5c:	2100      	movs	r1, #0
+  5e:	6878      	ldr	r0, [r7, #4]
+  60:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+  64:	4603      	mov	r3, r0
+  66:	73fb      	strb	r3, [r7, #15]
+  68:	7bfb      	ldrb	r3, [r7, #15]
+  6a:	f023 0310 	bic.w	r3, r3, #16
+  6e:	73fb      	strb	r3, [r7, #15]
+  70:	78fb      	ldrb	r3, [r7, #3]
+  72:	2b00      	cmp	r3, #0
+  74:	d003      	beq.n	7e <PCA9685::Sleep(bool)+0x2e>
+  76:	7bfb      	ldrb	r3, [r7, #15]
+  78:	f043 0310 	orr.w	r3, r3, #16
+  7c:	73fb      	strb	r3, [r7, #15]
+  7e:	7bfb      	ldrb	r3, [r7, #15]
+  80:	461a      	mov	r2, r3
+  82:	2100      	movs	r1, #0
+  84:	6878      	ldr	r0, [r7, #4]
+  86:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+  8a:	7bfb      	ldrb	r3, [r7, #15]
+  8c:	f023 0380 	bic.w	r3, r3, #128	; 0x80
+  90:	2b00      	cmp	r3, #0
+  92:	d007      	beq.n	a4 <PCA9685::Sleep(bool)+0x54>
+  94:	f44f 70fa 	mov.w	r0, #500	; 0x1f4
+  98:	f7ff fffe 	bl	0 <PCA9685::PCA9685(unsigned char)>
+  9c:	7bfb      	ldrb	r3, [r7, #15]
+  9e:	f063 037f 	orn	r3, r3, #127	; 0x7f
+  a2:	73fb      	strb	r3, [r7, #15]
+  a4:	bf00      	nop
+  a6:	3710      	adds	r7, #16
+  a8:	46bd      	mov	sp, r7
+  aa:	bd80      	pop	{r7, pc}
+
+000000ac <PCA9685::SetPreScaller(unsigned char)>:
+  ac:	b580      	push	{r7, lr}
+  ae:	b082      	sub	sp, #8
+  b0:	af00      	add	r7, sp, #0
+  b2:	6078      	str	r0, [r7, #4]
+  b4:	460b      	mov	r3, r1
+  b6:	70fb      	strb	r3, [r7, #3]
+  b8:	78fb      	ldrb	r3, [r7, #3]
+  ba:	2b03      	cmp	r3, #3
+  bc:	bf38      	it	cc
+  be:	2303      	movcc	r3, #3
+  c0:	70fb      	strb	r3, [r7, #3]
+  c2:	2101      	movs	r1, #1
+  c4:	6878      	ldr	r0, [r7, #4]
+  c6:	f7ff fffe 	bl	50 <PCA9685::Sleep(bool)>
+  ca:	78fb      	ldrb	r3, [r7, #3]
+  cc:	461a      	mov	r2, r3
+  ce:	21fe      	movs	r1, #254	; 0xfe
+  d0:	6878      	ldr	r0, [r7, #4]
+  d2:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+  d6:	2100      	movs	r1, #0
+  d8:	6878      	ldr	r0, [r7, #4]
+  da:	f7ff fffe 	bl	50 <PCA9685::Sleep(bool)>
+  de:	bf00      	nop
+  e0:	3708      	adds	r7, #8
+  e2:	46bd      	mov	sp, r7
+  e4:	bd80      	pop	{r7, pc}
+
+000000e6 <PCA9685::GetPreScaller()>:
+  e6:	b580      	push	{r7, lr}
+  e8:	b082      	sub	sp, #8
+  ea:	af00      	add	r7, sp, #0
+  ec:	6078      	str	r0, [r7, #4]
+  ee:	21fe      	movs	r1, #254	; 0xfe
+  f0:	6878      	ldr	r0, [r7, #4]
+  f2:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+  f6:	4603      	mov	r3, r0
+  f8:	4618      	mov	r0, r3
+  fa:	3708      	adds	r7, #8
+  fc:	46bd      	mov	sp, r7
+  fe:	bd80      	pop	{r7, pc}
+
+00000100 <PCA9685::SetFrequency(unsigned short)>:
+ 100:	b580      	push	{r7, lr}
+ 102:	b082      	sub	sp, #8
+ 104:	af00      	add	r7, sp, #0
+ 106:	6078      	str	r0, [r7, #4]
+ 108:	460b      	mov	r3, r1
+ 10a:	807b      	strh	r3, [r7, #2]
+ 10c:	887b      	ldrh	r3, [r7, #2]
+ 10e:	4619      	mov	r1, r3
+ 110:	6878      	ldr	r0, [r7, #4]
+ 112:	f7ff fffe 	bl	48c <PCA9685::CalcPresScale(unsigned short)>
+ 116:	4603      	mov	r3, r0
+ 118:	4619      	mov	r1, r3
+ 11a:	6878      	ldr	r0, [r7, #4]
+ 11c:	f7ff fffe 	bl	ac <PCA9685::SetPreScaller(unsigned char)>
+ 120:	bf00      	nop
+ 122:	3708      	adds	r7, #8
+ 124:	46bd      	mov	sp, r7
+ 126:	bd80      	pop	{r7, pc}
+
+00000128 <PCA9685::GetFrequency()>:
+ 128:	b580      	push	{r7, lr}
+ 12a:	b082      	sub	sp, #8
+ 12c:	af00      	add	r7, sp, #0
+ 12e:	6078      	str	r0, [r7, #4]
+ 130:	6878      	ldr	r0, [r7, #4]
+ 132:	f7ff fffe 	bl	e6 <PCA9685::GetPreScaller()>
+ 136:	4603      	mov	r3, r0
+ 138:	4619      	mov	r1, r3
+ 13a:	6878      	ldr	r0, [r7, #4]
+ 13c:	f7ff fffe 	bl	50c <PCA9685::CalcFrequency(unsigned char)>
+ 140:	4603      	mov	r3, r0
+ 142:	4618      	mov	r0, r3
+ 144:	3708      	adds	r7, #8
+ 146:	46bd      	mov	sp, r7
+ 148:	bd80      	pop	{r7, pc}
+
+0000014a <PCA9685::SetOCH(TPCA9685Och)>:
+ 14a:	b580      	push	{r7, lr}
+ 14c:	b084      	sub	sp, #16
+ 14e:	af00      	add	r7, sp, #0
+ 150:	6078      	str	r0, [r7, #4]
+ 152:	6039      	str	r1, [r7, #0]
+ 154:	2101      	movs	r1, #1
+ 156:	6878      	ldr	r0, [r7, #4]
+ 158:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 15c:	4603      	mov	r3, r0
+ 15e:	73fb      	strb	r3, [r7, #15]
+ 160:	7bfb      	ldrb	r3, [r7, #15]
+ 162:	f023 0308 	bic.w	r3, r3, #8
+ 166:	73fb      	strb	r3, [r7, #15]
+ 168:	683b      	ldr	r3, [r7, #0]
+ 16a:	2b08      	cmp	r3, #8
+ 16c:	d103      	bne.n	176 <PCA9685::SetOCH(TPCA9685Och)+0x2c>
+ 16e:	7bfb      	ldrb	r3, [r7, #15]
+ 170:	f043 0308 	orr.w	r3, r3, #8
+ 174:	73fb      	strb	r3, [r7, #15]
+ 176:	7bfb      	ldrb	r3, [r7, #15]
+ 178:	461a      	mov	r2, r3
+ 17a:	2101      	movs	r1, #1
+ 17c:	6878      	ldr	r0, [r7, #4]
+ 17e:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+ 182:	bf00      	nop
+ 184:	3710      	adds	r7, #16
+ 186:	46bd      	mov	sp, r7
+ 188:	bd80      	pop	{r7, pc}
+
+0000018a <PCA9685::GetOCH()>:
+ 18a:	b580      	push	{r7, lr}
+ 18c:	b084      	sub	sp, #16
+ 18e:	af00      	add	r7, sp, #0
+ 190:	6078      	str	r0, [r7, #4]
+ 192:	2101      	movs	r1, #1
+ 194:	6878      	ldr	r0, [r7, #4]
+ 196:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 19a:	4603      	mov	r3, r0
+ 19c:	f003 0308 	and.w	r3, r3, #8
+ 1a0:	60fb      	str	r3, [r7, #12]
+ 1a2:	68fb      	ldr	r3, [r7, #12]
+ 1a4:	4618      	mov	r0, r3
+ 1a6:	3710      	adds	r7, #16
+ 1a8:	46bd      	mov	sp, r7
+ 1aa:	bd80      	pop	{r7, pc}
+
+000001ac <PCA9685::SetInvert(bool)>:
+ 1ac:	b580      	push	{r7, lr}
+ 1ae:	b084      	sub	sp, #16
+ 1b0:	af00      	add	r7, sp, #0
+ 1b2:	6078      	str	r0, [r7, #4]
+ 1b4:	460b      	mov	r3, r1
+ 1b6:	70fb      	strb	r3, [r7, #3]
+ 1b8:	2101      	movs	r1, #1
+ 1ba:	6878      	ldr	r0, [r7, #4]
+ 1bc:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 1c0:	4603      	mov	r3, r0
+ 1c2:	73fb      	strb	r3, [r7, #15]
+ 1c4:	7bfb      	ldrb	r3, [r7, #15]
+ 1c6:	f023 0310 	bic.w	r3, r3, #16
+ 1ca:	73fb      	strb	r3, [r7, #15]
+ 1cc:	78fb      	ldrb	r3, [r7, #3]
+ 1ce:	2b00      	cmp	r3, #0
+ 1d0:	d003      	beq.n	1da <PCA9685::SetInvert(bool)+0x2e>
+ 1d2:	7bfb      	ldrb	r3, [r7, #15]
+ 1d4:	f043 0310 	orr.w	r3, r3, #16
+ 1d8:	73fb      	strb	r3, [r7, #15]
+ 1da:	7bfb      	ldrb	r3, [r7, #15]
+ 1dc:	461a      	mov	r2, r3
+ 1de:	2101      	movs	r1, #1
+ 1e0:	6878      	ldr	r0, [r7, #4]
+ 1e2:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+ 1e6:	bf00      	nop
+ 1e8:	3710      	adds	r7, #16
+ 1ea:	46bd      	mov	sp, r7
+ 1ec:	bd80      	pop	{r7, pc}
+
+000001ee <PCA9685::GetInvert()>:
+ 1ee:	b580      	push	{r7, lr}
+ 1f0:	b084      	sub	sp, #16
+ 1f2:	af00      	add	r7, sp, #0
+ 1f4:	6078      	str	r0, [r7, #4]
+ 1f6:	2101      	movs	r1, #1
+ 1f8:	6878      	ldr	r0, [r7, #4]
+ 1fa:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 1fe:	4603      	mov	r3, r0
+ 200:	f003 0310 	and.w	r3, r3, #16
+ 204:	60fb      	str	r3, [r7, #12]
+ 206:	68fb      	ldr	r3, [r7, #12]
+ 208:	2b10      	cmp	r3, #16
+ 20a:	bf0c      	ite	eq
+ 20c:	2301      	moveq	r3, #1
+ 20e:	2300      	movne	r3, #0
+ 210:	b2db      	uxtb	r3, r3
+ 212:	4618      	mov	r0, r3
+ 214:	3710      	adds	r7, #16
+ 216:	46bd      	mov	sp, r7
+ 218:	bd80      	pop	{r7, pc}
+
+0000021a <PCA9685::SetOutDriver(bool)>:
+ 21a:	b580      	push	{r7, lr}
+ 21c:	b084      	sub	sp, #16
+ 21e:	af00      	add	r7, sp, #0
+ 220:	6078      	str	r0, [r7, #4]
+ 222:	460b      	mov	r3, r1
+ 224:	70fb      	strb	r3, [r7, #3]
+ 226:	2101      	movs	r1, #1
+ 228:	6878      	ldr	r0, [r7, #4]
+ 22a:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 22e:	4603      	mov	r3, r0
+ 230:	73fb      	strb	r3, [r7, #15]
+ 232:	7bfb      	ldrb	r3, [r7, #15]
+ 234:	f023 0304 	bic.w	r3, r3, #4
+ 238:	73fb      	strb	r3, [r7, #15]
+ 23a:	78fb      	ldrb	r3, [r7, #3]
+ 23c:	2b00      	cmp	r3, #0
+ 23e:	d003      	beq.n	248 <PCA9685::SetOutDriver(bool)+0x2e>
+ 240:	7bfb      	ldrb	r3, [r7, #15]
+ 242:	f043 0304 	orr.w	r3, r3, #4
+ 246:	73fb      	strb	r3, [r7, #15]
+ 248:	7bfb      	ldrb	r3, [r7, #15]
+ 24a:	461a      	mov	r2, r3
+ 24c:	2101      	movs	r1, #1
+ 24e:	6878      	ldr	r0, [r7, #4]
+ 250:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+ 254:	bf00      	nop
+ 256:	3710      	adds	r7, #16
+ 258:	46bd      	mov	sp, r7
+ 25a:	bd80      	pop	{r7, pc}
+
+0000025c <PCA9685::GetOutDriver()>:
+ 25c:	b580      	push	{r7, lr}
+ 25e:	b084      	sub	sp, #16
+ 260:	af00      	add	r7, sp, #0
+ 262:	6078      	str	r0, [r7, #4]
+ 264:	2101      	movs	r1, #1
+ 266:	6878      	ldr	r0, [r7, #4]
+ 268:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 26c:	4603      	mov	r3, r0
+ 26e:	f003 0304 	and.w	r3, r3, #4
+ 272:	60fb      	str	r3, [r7, #12]
+ 274:	68fb      	ldr	r3, [r7, #12]
+ 276:	2b04      	cmp	r3, #4
+ 278:	bf0c      	ite	eq
+ 27a:	2301      	moveq	r3, #1
+ 27c:	2300      	movne	r3, #0
+ 27e:	b2db      	uxtb	r3, r3
+ 280:	4618      	mov	r0, r3
+ 282:	3710      	adds	r7, #16
+ 284:	46bd      	mov	sp, r7
+ 286:	bd80      	pop	{r7, pc}
+
+00000288 <PCA9685::Write(unsigned char, unsigned short, unsigned short)>:
+ 288:	b580      	push	{r7, lr}
+ 28a:	b086      	sub	sp, #24
+ 28c:	af00      	add	r7, sp, #0
+ 28e:	60f8      	str	r0, [r7, #12]
+ 290:	4608      	mov	r0, r1
+ 292:	4611      	mov	r1, r2
+ 294:	461a      	mov	r2, r3
+ 296:	4603      	mov	r3, r0
+ 298:	72fb      	strb	r3, [r7, #11]
+ 29a:	460b      	mov	r3, r1
+ 29c:	813b      	strh	r3, [r7, #8]
+ 29e:	4613      	mov	r3, r2
+ 2a0:	80fb      	strh	r3, [r7, #6]
+ 2a2:	7afb      	ldrb	r3, [r7, #11]
+ 2a4:	2b0f      	cmp	r3, #15
+ 2a6:	d805      	bhi.n	2b4 <PCA9685::Write(unsigned char, unsigned short, unsigned short)+0x2c>
+ 2a8:	7afb      	ldrb	r3, [r7, #11]
+ 2aa:	009b      	lsls	r3, r3, #2
+ 2ac:	b2db      	uxtb	r3, r3
+ 2ae:	3306      	adds	r3, #6
+ 2b0:	75fb      	strb	r3, [r7, #23]
+ 2b2:	e001      	b.n	2b8 <PCA9685::Write(unsigned char, unsigned short, unsigned short)+0x30>
+ 2b4:	23fa      	movs	r3, #250	; 0xfa
+ 2b6:	75fb      	strb	r3, [r7, #23]
+ 2b8:	88fb      	ldrh	r3, [r7, #6]
+ 2ba:	893a      	ldrh	r2, [r7, #8]
+ 2bc:	7df9      	ldrb	r1, [r7, #23]
+ 2be:	68f8      	ldr	r0, [r7, #12]
+ 2c0:	f7ff fffe 	bl	7dc <PCA9685::I2cWriteReg(unsigned char, unsigned short, unsigned short)>
+ 2c4:	bf00      	nop
+ 2c6:	3718      	adds	r7, #24
+ 2c8:	46bd      	mov	sp, r7
+ 2ca:	bd80      	pop	{r7, pc}
+
+000002cc <PCA9685::Write(unsigned char, unsigned short)>:
+ 2cc:	b580      	push	{r7, lr}
+ 2ce:	b082      	sub	sp, #8
+ 2d0:	af00      	add	r7, sp, #0
+ 2d2:	6078      	str	r0, [r7, #4]
+ 2d4:	460b      	mov	r3, r1
+ 2d6:	70fb      	strb	r3, [r7, #3]
+ 2d8:	4613      	mov	r3, r2
+ 2da:	803b      	strh	r3, [r7, #0]
+ 2dc:	883b      	ldrh	r3, [r7, #0]
+ 2de:	78f9      	ldrb	r1, [r7, #3]
+ 2e0:	2200      	movs	r2, #0
+ 2e2:	6878      	ldr	r0, [r7, #4]
+ 2e4:	f7ff fffe 	bl	288 <PCA9685::Write(unsigned char, unsigned short, unsigned short)>
+ 2e8:	bf00      	nop
+ 2ea:	3708      	adds	r7, #8
+ 2ec:	46bd      	mov	sp, r7
+ 2ee:	bd80      	pop	{r7, pc}
+
+000002f0 <PCA9685::Write(unsigned short, unsigned short)>:
+ 2f0:	b580      	push	{r7, lr}
+ 2f2:	b082      	sub	sp, #8
+ 2f4:	af00      	add	r7, sp, #0
+ 2f6:	6078      	str	r0, [r7, #4]
+ 2f8:	460b      	mov	r3, r1
+ 2fa:	807b      	strh	r3, [r7, #2]
+ 2fc:	4613      	mov	r3, r2
+ 2fe:	803b      	strh	r3, [r7, #0]
+ 300:	883b      	ldrh	r3, [r7, #0]
+ 302:	887a      	ldrh	r2, [r7, #2]
+ 304:	2110      	movs	r1, #16
+ 306:	6878      	ldr	r0, [r7, #4]
+ 308:	f7ff fffe 	bl	288 <PCA9685::Write(unsigned char, unsigned short, unsigned short)>
+ 30c:	bf00      	nop
+ 30e:	3708      	adds	r7, #8
+ 310:	46bd      	mov	sp, r7
+ 312:	bd80      	pop	{r7, pc}
+
+00000314 <PCA9685::Write(unsigned short)>:
+ 314:	b580      	push	{r7, lr}
+ 316:	b082      	sub	sp, #8
+ 318:	af00      	add	r7, sp, #0
+ 31a:	6078      	str	r0, [r7, #4]
+ 31c:	460b      	mov	r3, r1
+ 31e:	807b      	strh	r3, [r7, #2]
+ 320:	887b      	ldrh	r3, [r7, #2]
+ 322:	461a      	mov	r2, r3
+ 324:	2110      	movs	r1, #16
+ 326:	6878      	ldr	r0, [r7, #4]
+ 328:	f7ff fffe 	bl	2cc <PCA9685::Write(unsigned char, unsigned short)>
+ 32c:	bf00      	nop
+ 32e:	3708      	adds	r7, #8
+ 330:	46bd      	mov	sp, r7
+ 332:	bd80      	pop	{r7, pc}
+
+00000334 <PCA9685::Read(unsigned char, unsigned short*, unsigned short*)>:
+ 334:	b580      	push	{r7, lr}
+ 336:	b086      	sub	sp, #24
+ 338:	af00      	add	r7, sp, #0
+ 33a:	60f8      	str	r0, [r7, #12]
+ 33c:	607a      	str	r2, [r7, #4]
+ 33e:	603b      	str	r3, [r7, #0]
+ 340:	460b      	mov	r3, r1
+ 342:	72fb      	strb	r3, [r7, #11]
+ 344:	7afb      	ldrb	r3, [r7, #11]
+ 346:	2b0f      	cmp	r3, #15
+ 348:	d805      	bhi.n	356 <PCA9685::Read(unsigned char, unsigned short*, unsigned short*)+0x22>
+ 34a:	7afb      	ldrb	r3, [r7, #11]
+ 34c:	009b      	lsls	r3, r3, #2
+ 34e:	b2db      	uxtb	r3, r3
+ 350:	3306      	adds	r3, #6
+ 352:	75fb      	strb	r3, [r7, #23]
+ 354:	e001      	b.n	35a <PCA9685::Read(unsigned char, unsigned short*, unsigned short*)+0x26>
+ 356:	23fa      	movs	r3, #250	; 0xfa
+ 358:	75fb      	strb	r3, [r7, #23]
+ 35a:	687b      	ldr	r3, [r7, #4]
+ 35c:	2b00      	cmp	r3, #0
+ 35e:	d008      	beq.n	372 <PCA9685::Read(unsigned char, unsigned short*, unsigned short*)+0x3e>
+ 360:	7dfb      	ldrb	r3, [r7, #23]
+ 362:	4619      	mov	r1, r3
+ 364:	68f8      	ldr	r0, [r7, #12]
+ 366:	f7ff fffe 	bl	768 <PCA9685::I2cReadReg16(unsigned char)>
+ 36a:	4603      	mov	r3, r0
+ 36c:	461a      	mov	r2, r3
+ 36e:	687b      	ldr	r3, [r7, #4]
+ 370:	801a      	strh	r2, [r3, #0]
+ 372:	683b      	ldr	r3, [r7, #0]
+ 374:	2b00      	cmp	r3, #0
+ 376:	d00a      	beq.n	38e <PCA9685::Read(unsigned char, unsigned short*, unsigned short*)+0x5a>
+ 378:	7dfb      	ldrb	r3, [r7, #23]
+ 37a:	3302      	adds	r3, #2
+ 37c:	b2db      	uxtb	r3, r3
+ 37e:	4619      	mov	r1, r3
+ 380:	68f8      	ldr	r0, [r7, #12]
+ 382:	f7ff fffe 	bl	768 <PCA9685::I2cReadReg16(unsigned char)>
+ 386:	4603      	mov	r3, r0
+ 388:	461a      	mov	r2, r3
+ 38a:	683b      	ldr	r3, [r7, #0]
+ 38c:	801a      	strh	r2, [r3, #0]
+ 38e:	bf00      	nop
+ 390:	3718      	adds	r7, #24
+ 392:	46bd      	mov	sp, r7
+ 394:	bd80      	pop	{r7, pc}
+
+00000396 <PCA9685::Read(unsigned short*, unsigned short*)>:
+ 396:	b580      	push	{r7, lr}
+ 398:	b084      	sub	sp, #16
+ 39a:	af00      	add	r7, sp, #0
+ 39c:	60f8      	str	r0, [r7, #12]
+ 39e:	60b9      	str	r1, [r7, #8]
+ 3a0:	607a      	str	r2, [r7, #4]
+ 3a2:	687b      	ldr	r3, [r7, #4]
+ 3a4:	68ba      	ldr	r2, [r7, #8]
+ 3a6:	2110      	movs	r1, #16
+ 3a8:	68f8      	ldr	r0, [r7, #12]
+ 3aa:	f7ff fffe 	bl	334 <PCA9685::Read(unsigned char, unsigned short*, unsigned short*)>
+ 3ae:	bf00      	nop
+ 3b0:	3710      	adds	r7, #16
+ 3b2:	46bd      	mov	sp, r7
+ 3b4:	bd80      	pop	{r7, pc}
+
+000003b6 <PCA9685::SetFullOn(unsigned char, bool)>:
+ 3b6:	b580      	push	{r7, lr}
+ 3b8:	b084      	sub	sp, #16
+ 3ba:	af00      	add	r7, sp, #0
+ 3bc:	6078      	str	r0, [r7, #4]
+ 3be:	460b      	mov	r3, r1
+ 3c0:	70fb      	strb	r3, [r7, #3]
+ 3c2:	4613      	mov	r3, r2
+ 3c4:	70bb      	strb	r3, [r7, #2]
+ 3c6:	78fb      	ldrb	r3, [r7, #3]
+ 3c8:	2b0f      	cmp	r3, #15
+ 3ca:	d805      	bhi.n	3d8 <PCA9685::SetFullOn(unsigned char, bool)+0x22>
+ 3cc:	78fb      	ldrb	r3, [r7, #3]
+ 3ce:	009b      	lsls	r3, r3, #2
+ 3d0:	b2db      	uxtb	r3, r3
+ 3d2:	3307      	adds	r3, #7
+ 3d4:	73bb      	strb	r3, [r7, #14]
+ 3d6:	e001      	b.n	3dc <PCA9685::SetFullOn(unsigned char, bool)+0x26>
+ 3d8:	23fb      	movs	r3, #251	; 0xfb
+ 3da:	73bb      	strb	r3, [r7, #14]
+ 3dc:	7bbb      	ldrb	r3, [r7, #14]
+ 3de:	4619      	mov	r1, r3
+ 3e0:	6878      	ldr	r0, [r7, #4]
+ 3e2:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 3e6:	4603      	mov	r3, r0
+ 3e8:	73fb      	strb	r3, [r7, #15]
+ 3ea:	78bb      	ldrb	r3, [r7, #2]
+ 3ec:	2b00      	cmp	r3, #0
+ 3ee:	d004      	beq.n	3fa <PCA9685::SetFullOn(unsigned char, bool)+0x44>
+ 3f0:	7bfb      	ldrb	r3, [r7, #15]
+ 3f2:	f043 0310 	orr.w	r3, r3, #16
+ 3f6:	b2db      	uxtb	r3, r3
+ 3f8:	e003      	b.n	402 <PCA9685::SetFullOn(unsigned char, bool)+0x4c>
+ 3fa:	7bfb      	ldrb	r3, [r7, #15]
+ 3fc:	f023 0310 	bic.w	r3, r3, #16
+ 400:	b2db      	uxtb	r3, r3
+ 402:	73fb      	strb	r3, [r7, #15]
+ 404:	7bfa      	ldrb	r2, [r7, #15]
+ 406:	7bbb      	ldrb	r3, [r7, #14]
+ 408:	4619      	mov	r1, r3
+ 40a:	6878      	ldr	r0, [r7, #4]
+ 40c:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+ 410:	78bb      	ldrb	r3, [r7, #2]
+ 412:	2b00      	cmp	r3, #0
+ 414:	d005      	beq.n	422 <PCA9685::SetFullOn(unsigned char, bool)+0x6c>
+ 416:	78fb      	ldrb	r3, [r7, #3]
+ 418:	2200      	movs	r2, #0
+ 41a:	4619      	mov	r1, r3
+ 41c:	6878      	ldr	r0, [r7, #4]
+ 41e:	f7ff fffe 	bl	42a <PCA9685::SetFullOff(unsigned char, bool)>
+ 422:	bf00      	nop
+ 424:	3710      	adds	r7, #16
+ 426:	46bd      	mov	sp, r7
+ 428:	bd80      	pop	{r7, pc}
+
+0000042a <PCA9685::SetFullOff(unsigned char, bool)>:
+ 42a:	b580      	push	{r7, lr}
+ 42c:	b084      	sub	sp, #16
+ 42e:	af00      	add	r7, sp, #0
+ 430:	6078      	str	r0, [r7, #4]
+ 432:	460b      	mov	r3, r1
+ 434:	70fb      	strb	r3, [r7, #3]
+ 436:	4613      	mov	r3, r2
+ 438:	70bb      	strb	r3, [r7, #2]
+ 43a:	78fb      	ldrb	r3, [r7, #3]
+ 43c:	2b0f      	cmp	r3, #15
+ 43e:	d805      	bhi.n	44c <PCA9685::SetFullOff(unsigned char, bool)+0x22>
+ 440:	78fb      	ldrb	r3, [r7, #3]
+ 442:	009b      	lsls	r3, r3, #2
+ 444:	b2db      	uxtb	r3, r3
+ 446:	3309      	adds	r3, #9
+ 448:	73bb      	strb	r3, [r7, #14]
+ 44a:	e001      	b.n	450 <PCA9685::SetFullOff(unsigned char, bool)+0x26>
+ 44c:	23fd      	movs	r3, #253	; 0xfd
+ 44e:	73bb      	strb	r3, [r7, #14]
+ 450:	7bbb      	ldrb	r3, [r7, #14]
+ 452:	4619      	mov	r1, r3
+ 454:	6878      	ldr	r0, [r7, #4]
+ 456:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 45a:	4603      	mov	r3, r0
+ 45c:	73fb      	strb	r3, [r7, #15]
+ 45e:	78bb      	ldrb	r3, [r7, #2]
+ 460:	2b00      	cmp	r3, #0
+ 462:	d004      	beq.n	46e <PCA9685::SetFullOff(unsigned char, bool)+0x44>
+ 464:	7bfb      	ldrb	r3, [r7, #15]
+ 466:	f043 0310 	orr.w	r3, r3, #16
+ 46a:	b2db      	uxtb	r3, r3
+ 46c:	e003      	b.n	476 <PCA9685::SetFullOff(unsigned char, bool)+0x4c>
+ 46e:	7bfb      	ldrb	r3, [r7, #15]
+ 470:	f023 0310 	bic.w	r3, r3, #16
+ 474:	b2db      	uxtb	r3, r3
+ 476:	73fb      	strb	r3, [r7, #15]
+ 478:	7bfa      	ldrb	r2, [r7, #15]
+ 47a:	7bbb      	ldrb	r3, [r7, #14]
+ 47c:	4619      	mov	r1, r3
+ 47e:	6878      	ldr	r0, [r7, #4]
+ 480:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+ 484:	bf00      	nop
+ 486:	3710      	adds	r7, #16
+ 488:	46bd      	mov	sp, r7
+ 48a:	bd80      	pop	{r7, pc}
+
+0000048c <PCA9685::CalcPresScale(unsigned short)>:
+ 48c:	b480      	push	{r7}
+ 48e:	b087      	sub	sp, #28
+ 490:	af00      	add	r7, sp, #0
+ 492:	60f8      	str	r0, [r7, #12]
+ 494:	460b      	mov	r3, r1
+ 496:	817b      	strh	r3, [r7, #10]
+ 498:	897b      	ldrh	r3, [r7, #10]
+ 49a:	f240 52f6 	movw	r2, #1526	; 0x5f6
+ 49e:	4293      	cmp	r3, r2
+ 4a0:	d805      	bhi.n	4ae <PCA9685::CalcPresScale(unsigned short)+0x22>
+ 4a2:	897b      	ldrh	r3, [r7, #10]
+ 4a4:	2b18      	cmp	r3, #24
+ 4a6:	bf38      	it	cc
+ 4a8:	2318      	movcc	r3, #24
+ 4aa:	b29b      	uxth	r3, r3
+ 4ac:	e001      	b.n	4b2 <PCA9685::CalcPresScale(unsigned short)+0x26>
+ 4ae:	f240 53f6 	movw	r3, #1526	; 0x5f6
+ 4b2:	817b      	strh	r3, [r7, #10]
+ 4b4:	f64b 4320 	movw	r3, #48160	; 0xbc20
+ 4b8:	f2c4 53be 	movt	r3, #17854	; 0x45be
+ 4bc:	617b      	str	r3, [r7, #20]
+ 4be:	897b      	ldrh	r3, [r7, #10]
+ 4c0:	ee07 3a90 	vmov	s15, r3
+ 4c4:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 4c8:	ed9f 7a0f 	vldr	s14, [pc, #60]	; 508 <PCA9685::CalcPresScale(unsigned short)+0x7c>
+ 4cc:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 4d0:	eeb7 7a00 	vmov.f32	s14, #112	; 0x3f800000  1.0
+ 4d4:	ee77 6ac7 	vsub.f32	s13, s15, s14
+ 4d8:	897b      	ldrh	r3, [r7, #10]
+ 4da:	ee07 3a90 	vmov	s15, r3
+ 4de:	eeb8 7a67 	vcvt.f32.u32	s14, s15
+ 4e2:	eec6 7a87 	vdiv.f32	s15, s13, s14
+ 4e6:	eeb7 7a00 	vmov.f32	s14, #112	; 0x3f800000  1.0
+ 4ea:	ee77 7ac7 	vsub.f32	s15, s15, s14
+ 4ee:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 4f2:	edc7 7a01 	vstr	s15, [r7, #4]
+ 4f6:	793b      	ldrb	r3, [r7, #4]
+ 4f8:	74fb      	strb	r3, [r7, #19]
+ 4fa:	7cfb      	ldrb	r3, [r7, #19]
+ 4fc:	4618      	mov	r0, r3
+ 4fe:	371c      	adds	r7, #28
+ 500:	46bd      	mov	sp, r7
+ 502:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 506:	4770      	bx	lr
+ 508:	45bebc20 	.word	0x45bebc20
+
+0000050c <PCA9685::CalcFrequency(unsigned char)>:
+ 50c:	b580      	push	{r7, lr}
+ 50e:	b086      	sub	sp, #24
+ 510:	af00      	add	r7, sp, #0
+ 512:	6078      	str	r0, [r7, #4]
+ 514:	460b      	mov	r3, r1
+ 516:	70fb      	strb	r3, [r7, #3]
+ 518:	f64b 4320 	movw	r3, #48160	; 0xbc20
+ 51c:	f2c4 53be 	movt	r3, #17854	; 0x45be
+ 520:	617b      	str	r3, [r7, #20]
+ 522:	78fb      	ldrb	r3, [r7, #3]
+ 524:	3301      	adds	r3, #1
+ 526:	ee07 3a90 	vmov	s15, r3
+ 52a:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 52e:	ed9f 7a29 	vldr	s14, [pc, #164]	; 5d4 <PCA9685::CalcFrequency(unsigned char)+0xc8>
+ 532:	ee77 7a87 	vadd.f32	s15, s15, s14
+ 536:	eeb7 7a00 	vmov.f32	s14, #112	; 0x3f800000  1.0
+ 53a:	ee77 6ac7 	vsub.f32	s13, s15, s14
+ 53e:	78fb      	ldrb	r3, [r7, #3]
+ 540:	3301      	adds	r3, #1
+ 542:	ee07 3a90 	vmov	s15, r3
+ 546:	eeb8 7ae7 	vcvt.f32.s32	s14, s15
+ 54a:	eec6 7a87 	vdiv.f32	s15, s13, s14
+ 54e:	eefc 7ae7 	vcvt.u32.f32	s15, s15
+ 552:	ee17 3a90 	vmov	r3, s15
+ 556:	827b      	strh	r3, [r7, #18]
+ 558:	8a7b      	ldrh	r3, [r7, #18]
+ 55a:	81fb      	strh	r3, [r7, #14]
+ 55c:	89fb      	ldrh	r3, [r7, #14]
+ 55e:	2b18      	cmp	r3, #24
+ 560:	d913      	bls.n	58a <PCA9685::CalcFrequency(unsigned char)+0x7e>
+ 562:	89fb      	ldrh	r3, [r7, #14]
+ 564:	4619      	mov	r1, r3
+ 566:	6878      	ldr	r0, [r7, #4]
+ 568:	f7ff fffe 	bl	48c <PCA9685::CalcPresScale(unsigned short)>
+ 56c:	4603      	mov	r3, r0
+ 56e:	461a      	mov	r2, r3
+ 570:	78fb      	ldrb	r3, [r7, #3]
+ 572:	4293      	cmp	r3, r2
+ 574:	bf14      	ite	ne
+ 576:	2301      	movne	r3, #1
+ 578:	2300      	moveq	r3, #0
+ 57a:	b2db      	uxtb	r3, r3
+ 57c:	2b00      	cmp	r3, #0
+ 57e:	d103      	bne.n	588 <PCA9685::CalcFrequency(unsigned char)+0x7c>
+ 580:	89fb      	ldrh	r3, [r7, #14]
+ 582:	3b01      	subs	r3, #1
+ 584:	81fb      	strh	r3, [r7, #14]
+ 586:	e7e9      	b.n	55c <PCA9685::CalcFrequency(unsigned char)+0x50>
+ 588:	bf00      	nop
+ 58a:	8a7b      	ldrh	r3, [r7, #18]
+ 58c:	823b      	strh	r3, [r7, #16]
+ 58e:	8a3b      	ldrh	r3, [r7, #16]
+ 590:	f240 52f5 	movw	r2, #1525	; 0x5f5
+ 594:	4293      	cmp	r3, r2
+ 596:	d813      	bhi.n	5c0 <PCA9685::CalcFrequency(unsigned char)+0xb4>
+ 598:	8a3b      	ldrh	r3, [r7, #16]
+ 59a:	4619      	mov	r1, r3
+ 59c:	6878      	ldr	r0, [r7, #4]
+ 59e:	f7ff fffe 	bl	48c <PCA9685::CalcPresScale(unsigned short)>
+ 5a2:	4603      	mov	r3, r0
+ 5a4:	461a      	mov	r2, r3
+ 5a6:	78fb      	ldrb	r3, [r7, #3]
+ 5a8:	4293      	cmp	r3, r2
+ 5aa:	bf14      	ite	ne
+ 5ac:	2301      	movne	r3, #1
+ 5ae:	2300      	moveq	r3, #0
+ 5b0:	b2db      	uxtb	r3, r3
+ 5b2:	2b00      	cmp	r3, #0
+ 5b4:	d103      	bne.n	5be <PCA9685::CalcFrequency(unsigned char)+0xb2>
+ 5b6:	8a3b      	ldrh	r3, [r7, #16]
+ 5b8:	3301      	adds	r3, #1
+ 5ba:	823b      	strh	r3, [r7, #16]
+ 5bc:	e7e7      	b.n	58e <PCA9685::CalcFrequency(unsigned char)+0x82>
+ 5be:	bf00      	nop
+ 5c0:	8a3a      	ldrh	r2, [r7, #16]
+ 5c2:	89fb      	ldrh	r3, [r7, #14]
+ 5c4:	4413      	add	r3, r2
+ 5c6:	b29b      	uxth	r3, r3
+ 5c8:	085b      	lsrs	r3, r3, #1
+ 5ca:	b29b      	uxth	r3, r3
+ 5cc:	4618      	mov	r0, r3
+ 5ce:	3718      	adds	r7, #24
+ 5d0:	46bd      	mov	sp, r7
+ 5d2:	bd80      	pop	{r7, pc}
+ 5d4:	45bebc20 	.word	0x45bebc20
+
+000005d8 <PCA9685::Dump()>:
+ 5d8:	b480      	push	{r7}
+ 5da:	b083      	sub	sp, #12
+ 5dc:	af00      	add	r7, sp, #0
+ 5de:	6078      	str	r0, [r7, #4]
+ 5e0:	bf00      	nop
+ 5e2:	370c      	adds	r7, #12
+ 5e4:	46bd      	mov	sp, r7
+ 5e6:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 5ea:	4770      	bx	lr
+
+000005ec <PCA9685::AutoIncrement(bool)>:
+ 5ec:	b580      	push	{r7, lr}
+ 5ee:	b084      	sub	sp, #16
+ 5f0:	af00      	add	r7, sp, #0
+ 5f2:	6078      	str	r0, [r7, #4]
+ 5f4:	460b      	mov	r3, r1
+ 5f6:	70fb      	strb	r3, [r7, #3]
+ 5f8:	2100      	movs	r1, #0
+ 5fa:	6878      	ldr	r0, [r7, #4]
+ 5fc:	f7ff fffe 	bl	6ac <PCA9685::I2cReadReg(unsigned char)>
+ 600:	4603      	mov	r3, r0
+ 602:	73fb      	strb	r3, [r7, #15]
+ 604:	7bfb      	ldrb	r3, [r7, #15]
+ 606:	f023 0320 	bic.w	r3, r3, #32
+ 60a:	73fb      	strb	r3, [r7, #15]
+ 60c:	78fb      	ldrb	r3, [r7, #3]
+ 60e:	2b00      	cmp	r3, #0
+ 610:	d003      	beq.n	61a <PCA9685::AutoIncrement(bool)+0x2e>
+ 612:	7bfb      	ldrb	r3, [r7, #15]
+ 614:	f043 0320 	orr.w	r3, r3, #32
+ 618:	73fb      	strb	r3, [r7, #15]
+ 61a:	7bfb      	ldrb	r3, [r7, #15]
+ 61c:	461a      	mov	r2, r3
+ 61e:	2100      	movs	r1, #0
+ 620:	6878      	ldr	r0, [r7, #4]
+ 622:	f7ff fffe 	bl	654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>
+ 626:	bf00      	nop
+ 628:	3710      	adds	r7, #16
+ 62a:	46bd      	mov	sp, r7
+ 62c:	bd80      	pop	{r7, pc}
+
+0000062e <PCA9685::I2cSetup()>:
+ 62e:	b580      	push	{r7, lr}
+ 630:	b082      	sub	sp, #8
+ 632:	af00      	add	r7, sp, #0
+ 634:	6078      	str	r0, [r7, #4]
+ 636:	687b      	ldr	r3, [r7, #4]
+ 638:	781b      	ldrb	r3, [r3, #0]
+ 63a:	4618      	mov	r0, r3
+ 63c:	f7ff fffe 	bl	0 <bcm2835_i2c_setSlaveAddress>
+ 640:	f44f 50d4 	mov.w	r0, #6784	; 0x1a80
+ 644:	f2c0 0006 	movt	r0, #6
+ 648:	f7ff fffe 	bl	0 <bcm2835_i2c_set_baudrate>
+ 64c:	bf00      	nop
+ 64e:	3708      	adds	r7, #8
+ 650:	46bd      	mov	sp, r7
+ 652:	bd80      	pop	{r7, pc}
+
+00000654 <PCA9685::I2cWriteReg(unsigned char, unsigned char)>:
+ 654:	b590      	push	{r4, r7, lr}
+ 656:	b085      	sub	sp, #20
+ 658:	af00      	add	r7, sp, #0
+ 65a:	6078      	str	r0, [r7, #4]
+ 65c:	460b      	mov	r3, r1
+ 65e:	70fb      	strb	r3, [r7, #3]
+ 660:	4613      	mov	r3, r2
+ 662:	70bb      	strb	r3, [r7, #2]
+ 664:	4c0f      	ldr	r4, [pc, #60]	; (6a4 <PCA9685::I2cWriteReg(unsigned char, unsigned char)+0x50>)
+ 666:	447c      	add	r4, pc
+ 668:	4b0f      	ldr	r3, [pc, #60]	; (6a8 <PCA9685::I2cWriteReg(unsigned char, unsigned char)+0x54>)
+ 66a:	58e3      	ldr	r3, [r4, r3]
+ 66c:	681b      	ldr	r3, [r3, #0]
+ 66e:	60fb      	str	r3, [r7, #12]
+ 670:	78fb      	ldrb	r3, [r7, #3]
+ 672:	723b      	strb	r3, [r7, #8]
+ 674:	78bb      	ldrb	r3, [r7, #2]
+ 676:	727b      	strb	r3, [r7, #9]
+ 678:	6878      	ldr	r0, [r7, #4]
+ 67a:	f7ff fffe 	bl	62e <PCA9685::I2cSetup()>
+ 67e:	f107 0308 	add.w	r3, r7, #8
+ 682:	2102      	movs	r1, #2
+ 684:	4618      	mov	r0, r3
+ 686:	f7ff fffe 	bl	0 <bcm2835_i2c_write>
+ 68a:	bf00      	nop
+ 68c:	4b06      	ldr	r3, [pc, #24]	; (6a8 <PCA9685::I2cWriteReg(unsigned char, unsigned char)+0x54>)
+ 68e:	58e3      	ldr	r3, [r4, r3]
+ 690:	68fa      	ldr	r2, [r7, #12]
+ 692:	681b      	ldr	r3, [r3, #0]
+ 694:	429a      	cmp	r2, r3
+ 696:	d001      	beq.n	69c <PCA9685::I2cWriteReg(unsigned char, unsigned char)+0x48>
+ 698:	f7ff fffe 	bl	0 <__stack_chk_fail>
+ 69c:	3714      	adds	r7, #20
+ 69e:	46bd      	mov	sp, r7
+ 6a0:	bd90      	pop	{r4, r7, pc}
+ 6a2:	bf00      	nop
+ 6a4:	0000003a 	.word	0x0000003a
+ 6a8:	00000000 	.word	0x00000000
+
+000006ac <PCA9685::I2cReadReg(unsigned char)>:
+ 6ac:	b590      	push	{r4, r7, lr}
+ 6ae:	b085      	sub	sp, #20
+ 6b0:	af00      	add	r7, sp, #0
+ 6b2:	6078      	str	r0, [r7, #4]
+ 6b4:	460b      	mov	r3, r1
+ 6b6:	70fb      	strb	r3, [r7, #3]
+ 6b8:	4c11      	ldr	r4, [pc, #68]	; (700 <PCA9685::I2cReadReg(unsigned char)+0x54>)
+ 6ba:	447c      	add	r4, pc
+ 6bc:	4b11      	ldr	r3, [pc, #68]	; (704 <PCA9685::I2cReadReg(unsigned char)+0x58>)
+ 6be:	58e3      	ldr	r3, [r4, r3]
+ 6c0:	681b      	ldr	r3, [r3, #0]
+ 6c2:	60fb      	str	r3, [r7, #12]
+ 6c4:	78fb      	ldrb	r3, [r7, #3]
+ 6c6:	72fb      	strb	r3, [r7, #11]
+ 6c8:	6878      	ldr	r0, [r7, #4]
+ 6ca:	f7ff fffe 	bl	62e <PCA9685::I2cSetup()>
+ 6ce:	f107 030b 	add.w	r3, r7, #11
+ 6d2:	2101      	movs	r1, #1
+ 6d4:	4618      	mov	r0, r3
+ 6d6:	f7ff fffe 	bl	0 <bcm2835_i2c_write>
+ 6da:	f107 030b 	add.w	r3, r7, #11
+ 6de:	2101      	movs	r1, #1
+ 6e0:	4618      	mov	r0, r3
+ 6e2:	f7ff fffe 	bl	0 <bcm2835_i2c_read>
+ 6e6:	7afb      	ldrb	r3, [r7, #11]
+ 6e8:	4618      	mov	r0, r3
+ 6ea:	4b06      	ldr	r3, [pc, #24]	; (704 <PCA9685::I2cReadReg(unsigned char)+0x58>)
+ 6ec:	58e3      	ldr	r3, [r4, r3]
+ 6ee:	68fa      	ldr	r2, [r7, #12]
+ 6f0:	681b      	ldr	r3, [r3, #0]
+ 6f2:	429a      	cmp	r2, r3
+ 6f4:	d001      	beq.n	6fa <PCA9685::I2cReadReg(unsigned char)+0x4e>
+ 6f6:	f7ff fffe 	bl	0 <__stack_chk_fail>
+ 6fa:	3714      	adds	r7, #20
+ 6fc:	46bd      	mov	sp, r7
+ 6fe:	bd90      	pop	{r4, r7, pc}
+ 700:	00000042 	.word	0x00000042
+ 704:	00000000 	.word	0x00000000
+
+00000708 <PCA9685::I2cWriteReg(unsigned char, unsigned short)>:
+ 708:	b590      	push	{r4, r7, lr}
+ 70a:	b085      	sub	sp, #20
+ 70c:	af00      	add	r7, sp, #0
+ 70e:	6078      	str	r0, [r7, #4]
+ 710:	460b      	mov	r3, r1
+ 712:	70fb      	strb	r3, [r7, #3]
+ 714:	4613      	mov	r3, r2
+ 716:	803b      	strh	r3, [r7, #0]
+ 718:	4c11      	ldr	r4, [pc, #68]	; (760 <PCA9685::I2cWriteReg(unsigned char, unsigned short)+0x58>)
+ 71a:	447c      	add	r4, pc
+ 71c:	4b11      	ldr	r3, [pc, #68]	; (764 <PCA9685::I2cWriteReg(unsigned char, unsigned short)+0x5c>)
+ 71e:	58e3      	ldr	r3, [r4, r3]
+ 720:	681b      	ldr	r3, [r3, #0]
+ 722:	60fb      	str	r3, [r7, #12]
+ 724:	78fb      	ldrb	r3, [r7, #3]
+ 726:	723b      	strb	r3, [r7, #8]
+ 728:	883b      	ldrh	r3, [r7, #0]
+ 72a:	b2db      	uxtb	r3, r3
+ 72c:	727b      	strb	r3, [r7, #9]
+ 72e:	883b      	ldrh	r3, [r7, #0]
+ 730:	121b      	asrs	r3, r3, #8
+ 732:	b2db      	uxtb	r3, r3
+ 734:	72bb      	strb	r3, [r7, #10]
+ 736:	6878      	ldr	r0, [r7, #4]
+ 738:	f7ff fffe 	bl	62e <PCA9685::I2cSetup()>
+ 73c:	f107 0308 	add.w	r3, r7, #8
+ 740:	2103      	movs	r1, #3
+ 742:	4618      	mov	r0, r3
+ 744:	f7ff fffe 	bl	0 <bcm2835_i2c_write>
+ 748:	bf00      	nop
+ 74a:	4b06      	ldr	r3, [pc, #24]	; (764 <PCA9685::I2cWriteReg(unsigned char, unsigned short)+0x5c>)
+ 74c:	58e3      	ldr	r3, [r4, r3]
+ 74e:	68fa      	ldr	r2, [r7, #12]
+ 750:	681b      	ldr	r3, [r3, #0]
+ 752:	429a      	cmp	r2, r3
+ 754:	d001      	beq.n	75a <PCA9685::I2cWriteReg(unsigned char, unsigned short)+0x52>
+ 756:	f7ff fffe 	bl	0 <__stack_chk_fail>
+ 75a:	3714      	adds	r7, #20
+ 75c:	46bd      	mov	sp, r7
+ 75e:	bd90      	pop	{r4, r7, pc}
+ 760:	00000042 	.word	0x00000042
+ 764:	00000000 	.word	0x00000000
+
+00000768 <PCA9685::I2cReadReg16(unsigned char)>:
+ 768:	b590      	push	{r4, r7, lr}
+ 76a:	b087      	sub	sp, #28
+ 76c:	af00      	add	r7, sp, #0
+ 76e:	6078      	str	r0, [r7, #4]
+ 770:	460b      	mov	r3, r1
+ 772:	70fb      	strb	r3, [r7, #3]
+ 774:	4c17      	ldr	r4, [pc, #92]	; (7d4 <PCA9685::I2cReadReg16(unsigned char)+0x6c>)
+ 776:	447c      	add	r4, pc
+ 778:	4b17      	ldr	r3, [pc, #92]	; (7d8 <PCA9685::I2cReadReg16(unsigned char)+0x70>)
+ 77a:	58e3      	ldr	r3, [r4, r3]
+ 77c:	681b      	ldr	r3, [r3, #0]
+ 77e:	617b      	str	r3, [r7, #20]
+ 780:	78fb      	ldrb	r3, [r7, #3]
+ 782:	73fb      	strb	r3, [r7, #15]
+ 784:	2300      	movs	r3, #0
+ 786:	743b      	strb	r3, [r7, #16]
+ 788:	2300      	movs	r3, #0
+ 78a:	747b      	strb	r3, [r7, #17]
+ 78c:	6878      	ldr	r0, [r7, #4]
+ 78e:	f7ff fffe 	bl	62e <PCA9685::I2cSetup()>
+ 792:	f107 030f 	add.w	r3, r7, #15
+ 796:	2101      	movs	r1, #1
+ 798:	4618      	mov	r0, r3
+ 79a:	f7ff fffe 	bl	0 <bcm2835_i2c_write>
+ 79e:	f107 0310 	add.w	r3, r7, #16
+ 7a2:	2102      	movs	r1, #2
+ 7a4:	4618      	mov	r0, r3
+ 7a6:	f7ff fffe 	bl	0 <bcm2835_i2c_read>
+ 7aa:	7c7b      	ldrb	r3, [r7, #17]
+ 7ac:	021b      	lsls	r3, r3, #8
+ 7ae:	b21a      	sxth	r2, r3
+ 7b0:	7c3b      	ldrb	r3, [r7, #16]
+ 7b2:	b21b      	sxth	r3, r3
+ 7b4:	4313      	orrs	r3, r2
+ 7b6:	b21b      	sxth	r3, r3
+ 7b8:	b29b      	uxth	r3, r3
+ 7ba:	4618      	mov	r0, r3
+ 7bc:	4b06      	ldr	r3, [pc, #24]	; (7d8 <PCA9685::I2cReadReg16(unsigned char)+0x70>)
+ 7be:	58e3      	ldr	r3, [r4, r3]
+ 7c0:	697a      	ldr	r2, [r7, #20]
+ 7c2:	681b      	ldr	r3, [r3, #0]
+ 7c4:	429a      	cmp	r2, r3
+ 7c6:	d001      	beq.n	7cc <PCA9685::I2cReadReg16(unsigned char)+0x64>
+ 7c8:	f7ff fffe 	bl	0 <__stack_chk_fail>
+ 7cc:	371c      	adds	r7, #28
+ 7ce:	46bd      	mov	sp, r7
+ 7d0:	bd90      	pop	{r4, r7, pc}
+ 7d2:	bf00      	nop
+ 7d4:	0000005a 	.word	0x0000005a
+ 7d8:	00000000 	.word	0x00000000
+
+000007dc <PCA9685::I2cWriteReg(unsigned char, unsigned short, unsigned short)>:
+ 7dc:	b590      	push	{r4, r7, lr}
+ 7de:	b089      	sub	sp, #36	; 0x24
+ 7e0:	af00      	add	r7, sp, #0
+ 7e2:	60f8      	str	r0, [r7, #12]
+ 7e4:	4608      	mov	r0, r1
+ 7e6:	4611      	mov	r1, r2
+ 7e8:	461a      	mov	r2, r3
+ 7ea:	4603      	mov	r3, r0
+ 7ec:	72fb      	strb	r3, [r7, #11]
+ 7ee:	460b      	mov	r3, r1
+ 7f0:	813b      	strh	r3, [r7, #8]
+ 7f2:	4613      	mov	r3, r2
+ 7f4:	80fb      	strh	r3, [r7, #6]
+ 7f6:	4c15      	ldr	r4, [pc, #84]	; (84c <PCA9685::I2cWriteReg(unsigned char, unsigned short, unsigned short)+0x70>)
+ 7f8:	447c      	add	r4, pc
+ 7fa:	4b15      	ldr	r3, [pc, #84]	; (850 <PCA9685::I2cWriteReg(unsigned char, unsigned short, unsigned short)+0x74>)
+ 7fc:	58e3      	ldr	r3, [r4, r3]
+ 7fe:	681b      	ldr	r3, [r3, #0]
+ 800:	61fb      	str	r3, [r7, #28]
+ 802:	7afb      	ldrb	r3, [r7, #11]
+ 804:	753b      	strb	r3, [r7, #20]
+ 806:	893b      	ldrh	r3, [r7, #8]
+ 808:	b2db      	uxtb	r3, r3
+ 80a:	757b      	strb	r3, [r7, #21]
+ 80c:	893b      	ldrh	r3, [r7, #8]
+ 80e:	121b      	asrs	r3, r3, #8
+ 810:	b2db      	uxtb	r3, r3
+ 812:	75bb      	strb	r3, [r7, #22]
+ 814:	88fb      	ldrh	r3, [r7, #6]
+ 816:	b2db      	uxtb	r3, r3
+ 818:	75fb      	strb	r3, [r7, #23]
+ 81a:	88fb      	ldrh	r3, [r7, #6]
+ 81c:	121b      	asrs	r3, r3, #8
+ 81e:	b2db      	uxtb	r3, r3
+ 820:	763b      	strb	r3, [r7, #24]
+ 822:	68f8      	ldr	r0, [r7, #12]
+ 824:	f7ff fffe 	bl	62e <PCA9685::I2cSetup()>
+ 828:	f107 0314 	add.w	r3, r7, #20
+ 82c:	2105      	movs	r1, #5
+ 82e:	4618      	mov	r0, r3
+ 830:	f7ff fffe 	bl	0 <bcm2835_i2c_write>
+ 834:	bf00      	nop
+ 836:	4b06      	ldr	r3, [pc, #24]	; (850 <PCA9685::I2cWriteReg(unsigned char, unsigned short, unsigned short)+0x74>)
+ 838:	58e3      	ldr	r3, [r4, r3]
+ 83a:	69fa      	ldr	r2, [r7, #28]
+ 83c:	681b      	ldr	r3, [r3, #0]
+ 83e:	429a      	cmp	r2, r3
+ 840:	d001      	beq.n	846 <PCA9685::I2cWriteReg(unsigned char, unsigned short, unsigned short)+0x6a>
+ 842:	f7ff fffe 	bl	0 <__stack_chk_fail>
+ 846:	3724      	adds	r7, #36	; 0x24
+ 848:	46bd      	mov	sp, r7
+ 84a:	bd90      	pop	{r4, r7, pc}
+ 84c:	00000050 	.word	0x00000050
+ 850:	00000000 	.word	0x00000000
+
+Disassembly of section .text.udelay:
+
+00000000 <udelay>:
+   0:	b590      	push	{r4, r7, lr}
+   2:	b083      	sub	sp, #12
+   4:	af00      	add	r7, sp, #0
+   6:	6078      	str	r0, [r7, #4]
+   8:	687b      	ldr	r3, [r7, #4]
+   a:	f04f 0400 	mov.w	r4, #0
+   e:	4618      	mov	r0, r3
+  10:	4621      	mov	r1, r4
+  12:	f7ff fffe 	bl	0 <bcm2835_delayMicroseconds>
+  16:	bf00      	nop
+  18:	370c      	adds	r7, #12
+  1a:	46bd      	mov	sp, r7
+  1c:	bd90      	pop	{r4, r7, pc}
