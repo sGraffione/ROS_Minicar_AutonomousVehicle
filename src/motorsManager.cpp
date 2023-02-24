@@ -12,10 +12,17 @@
 #include "bcm2835.h"
 #include "lib-pca9685/include/pca9685servo.h"
 
-#define IN1 24 // LEFT
-#define IN2 23 // LEFT
-#define IN3 22 // RIGHT
-#define IN4 25  // RIGHT
+// WiringPi PinOut
+#define IN1 4 // LEFT
+#define IN2 5 // LEFT
+#define IN3 3 // RIGHT
+#define IN4 2  // RIGHT
+// BCM PinOut
+#define INbcm1 19 // LEFT
+#define INbcm2 13 // LEFT
+#define INbcm3 6 // RIGHT
+#define INbcm4 16  // RIGHT
+
 #define ENA 0  // LEFT
 #define ENB 1  // RIGHT
 
@@ -43,11 +50,18 @@ class motorsInterface {
 		}
 		
 		ROS_INFO("Setting PinMode");
-		
-		digitalWrite(6,HIGH);
-		digitalWrite(19,LOW);
-		digitalWrite(13,HIGH);
-		digitalWrite(26,LOW);
+		/*
+		// left
+		bcm2835_gpio_write(INbcm1,1);
+		bcm2835_gpio_write(INbcm2,0);
+		// right
+		bcm2835_gpio_write(INbcm3,1);
+		bcm2835_gpio_write(INbcm4,0);
+		*/
+		digitalWrite(IN1,0);
+		digitalWrite(IN2,1);
+		digitalWrite(IN3,1);
+		digitalWrite(IN4,0);
 			
 			
 		// set forward as default
@@ -61,42 +75,42 @@ class motorsInterface {
 	}
 	
 	~motorsInterface(){}
-	/*
+	
 	void setForward(){
-		// left
-		bcm2835_gpio_write(13,HIGH);
-		bcm2835_gpio_write(19,LOW);
-		// right
-		bcm2835_gpio_write(6,HIGH);
-		bcm2835_gpio_write(25,LOW);
+		digitalWrite(IN1,0);
+		digitalWrite(IN2,1);
+		digitalWrite(IN3,1);
+		digitalWrite(IN4,0);
 	}
 	
 	void setBackward(){
-		// left
-		bcm2835_gpio_write(13,LOW);
-		bcm2835_gpio_write(19,HIGH);
-		// right
-		bcm2835_gpio_write(6,LOW);
-		bcm2835_gpio_write(25,HIGH);
+		digitalWrite(IN1,1);
+		digitalWrite(IN2,0);
+		digitalWrite(IN3,0);
+		digitalWrite(IN4,1);
 	}
-	*/
+	
 	void listenerCallback(const minicar::Motors& msg){
 		ROS_INFO("motors: [%f %f]", msg.throttle, msg.steering);
 		
 		int th = (int)(msg.throttle*MAX_DUTY_CYCLE/MAX_SPEED);
-		ROS_INFO("[%i]",th);
 		double steer = msg.steering*180/M_PI;
-		/*
+		
 		if(th >= 0){
 			this->setForward();
 		}else{
 			this->setBackward();
 			th = -1*th;
-		}*/
-		ROS_INFO("[%i]",th);
+		}
 		this->pca9685.Write(CHANNEL(ENA),VALUE(th));
 		this->pca9685.Write(CHANNEL(ENB),VALUE(th));
-		this->servo.SetAngle(CHANNEL(15), ANGLE(CENTER+steer));
+		this->servo.SetAngle(CHANNEL(15), ANGLE(CENTER-steer));
+	}
+	
+	void reset(){
+		this->pca9685.Write(CHANNEL(ENA),VALUE(0));
+		this->pca9685.Write(CHANNEL(ENB),VALUE(0));
+		this->servo.SetAngle(CHANNEL(15), ANGLE(CENTER));
 	}
 	
 };
@@ -125,6 +139,6 @@ int main(int argc, char **argv) {
 	}
 
 	ros::spin();
-	
+	motorsInt.reset();
 	return 0;
 }

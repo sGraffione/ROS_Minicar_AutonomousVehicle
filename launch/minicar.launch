@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-	<node pkg="minicar" name="controller" type="controller">
+	<node pkg="minicar" name="controller" type="controller" output="screen">
         <param name="q1" type="double" value="10.0"/>
         <param name="q2" type="double" value="10.0"/>
         <param name="q3" type="double" value="1"/>
@@ -8,6 +8,6 @@
         <param name="r2" type="double" value="0.05"/>
 	</node>
     
-    <node pkg="minicar" name="motorManager" type="motorManager.py" output="screen"/>
-    <node pkg="minicar" name="btsSensors" type="localization" />
+    <node pkg="minicar" name="motorsManager" type="motorsManager"/>
+    <node pkg="minicar" name="btsSensors" type="localization"/>
 </launch>

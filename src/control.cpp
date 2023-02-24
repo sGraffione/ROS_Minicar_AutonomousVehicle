@@ -19,7 +19,7 @@
 #include <casadi/casadi.hpp>
 
 #define MAX_SPEED 0.3
-#define MAX_SPEED_RATE 0.01 // tuned by hand
+#define MAX_SPEED_RATE 0.1 // tuned by hand
 #define MAX_DUTY_CYCLE 4000
 #define MAX_DELTA 0.523599
 #define MAX_DELTA_RATE 0.1
@@ -35,7 +35,7 @@ int leftMotor = 23;
 int dirLeftMotor = 24;
 float Ts = 0.1;
 float position[3];
-double roll = 0, pitch = 0, yaw = 0;
+double roll = 0, pitch = 0, yaw = M_PI_2;
 //double MAX_DELTA_RATE = (M_PI/3*Ts)/0.17; // computation based on datasheet of MG996R servo motor
 
 double L = 0.14;
@@ -326,12 +326,12 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "controller");
 	ROS_INFO("Connected to roscore");
 	ros::NodeHandle n;
-	//ros::Publisher current_pub = n.advertise<minicar::Motors>("motorsCtrl",1);
-	ros::Publisher current_pub_drive = n.advertise<geometry_msgs::Twist>("/minicar_driving_controller/cmd_vel",1);
-	ros::Publisher current_pub_steer = n.advertise<std_msgs::Float64MultiArray>("/minicar_steer_controller/command",1);
+	ros::Publisher current_pub = n.advertise<minicar::Motors>("motorsCtrl",1);
+	//ros::Publisher current_pub_drive = n.advertise<geometry_msgs::Twist>("/minicar_driving_controller/cmd_vel",1);
+	//ros::Publisher current_pub_steer = n.advertise<std_msgs::Float64MultiArray>("/minicar_steer_controller/command",1);
 	
-	//ros::Subscriber sub = n.subscribe("position",1,positionCallback);
-	ros::Subscriber sub = n.subscribe("/localization/state",1,gazeboPositionCallback);
+	ros::Subscriber sub = n.subscribe("position",1,positionCallback);
+	//ros::Subscriber sub = n.subscribe("/localization/state",1,gazeboPositionCallback);
 	
 	ros::Rate loop_rate(1/Ts);
 	
@@ -378,7 +378,7 @@ int main(int argc, char **argv){
 	// Bounds and initial guess for the state
 	std::vector<double> x_min  = { -inf, -inf, -inf, -MAX_SPEED, -MAX_DELTA };
 	std::vector<double> x_max  = {  inf,  inf,  inf,  MAX_SPEED,  MAX_DELTA };
-	std::vector<double> x_init = { position[0], position[1], yaw, 0.0, 0.0 }; // to get from localization topic
+	std::vector<double> x_init = { position[0], position[1], M_PI_2, 0.0, 0.0 }; // to get from localization topic
 
 	// Non linear, time continuous equations of the system
 	MX beta = atan((lr*tan(delta))/(lr+lr));
@@ -478,15 +478,15 @@ int main(int argc, char **argv){
 	// number of data on the waypoint (x,y,yaw,speed) 
 	int cols = 4; 
 
-	double waypoints[rows][cols] = {{0.3, 2.4, M_PI_2, 0.2},
-									{0.6, 5.0, 0.0,    0.2},
-									{4.8, 2.0, 0.0,    0.0}};
+	double waypoints[rows][cols] = {{0.4, 2.4, M_PI_2, 0.2},
+									{0.6, 4.3, 0.0,    0.2},
+									{3.0, 4.5, 0.0,    0.0}};
 	int indexWP = 0;
 	
 	ROS_INFO("Target (%f %f)",waypoints[indexWP][0],waypoints[indexWP][1]);
 
-	std_msgs::Float64MultiArray cmdS;
-	geometry_msgs::Twist cmdV;
+	//std_msgs::Float64MultiArray cmdS;
+	//geometry_msgs::Twist cmdV;
 	minicar::Motors motorsCtrl;
 			
 	double delta_opt = 0.0, Vel_opt = 0.0, delta_rate_opt = 0.0, Vel_rate_opt = 0.0;
@@ -519,17 +519,20 @@ int main(int argc, char **argv){
 
 		Vel_opt = v_init.at(3);
 		delta_opt = v_init.at(4);
+		
+		yaw = v_init.at(2);
 
 		// Get the optimal control
 		Vel_rate_opt = V_opt.at(nx);
 		delta_rate_opt = V_opt.at(nx+1);
-
+		
+		ROS_INFO("[%f %f %f]",Vel_opt,delta_opt,yaw);
 		//ROS_INFO("Optimal control [%f %f]",Vel_rate_opt,delta_rate_opt);
 
 		// Compute left and right steer angle according to an ackermann steering system to have a more accurate simulation
 		// TO COMMENT OUT WHEN USED ON REAL MINICAR
 		//ROS_INFO("[%f %f]", Vel_opt, delta_opt);
-	
+		/*
 		double R = (lr+lf)/tan(delta_opt);
 		double left_delta, right_delta;
 		left_delta = atan((lr+lf)/(R-width/2));
@@ -546,7 +549,11 @@ int main(int argc, char **argv){
 
 		current_pub_steer.publish(cmdS);
 		current_pub_drive.publish(cmdV);
-
+		*/
+		motorsCtrl.throttle = Vel_opt;
+		motorsCtrl.steering = -delta_opt;
+		current_pub.publish(motorsCtrl);
+		
 		double dist = sqrt(pow(position[0]-waypoints[indexWP][0],2)+pow(position[1]-waypoints[indexWP][1],2));
 		if(dist < 0.2){
 			if(indexWP < rows-1){
