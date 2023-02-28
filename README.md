@@ -4,9 +4,6 @@ Implementation of Autonomous system with ROS on a Minicar provided of a Raspberr
 - Ubuntu (or similar) 18.04
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
 - [WiringPi](http://wiringpi.com/wiringpi-updated-for-the-pi-v3plus/) for Raspberry Pi 3
-- [Adafruit-Blinka](pypi.org/project/Adafruit-Blinka/)
-- [Adafruit_PCA9685](https://github.com/adafruit/Adafruit_CircuitPython_PCA9685)
-- [Adafruit_servokit](https://docs.circuitpython.org/projects/servokit/en/latest/index.html)
 - Eigen3 (included in ROS)
 - [Casadi](https://github.com/casadi/casadi)
 
