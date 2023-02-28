@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import rospy
-import numpy as np
 from std_msgs.msg import String
 from minicar.msg import Motors
 import RPi.GPIO as GPIO
@@ -15,7 +14,9 @@ IN4 = 22
 ENA = 0
 ENB = 1
 
-MAX_DELTA = 30*180/np.PI
+PI = 3.141592653589793238
+
+MAX_DELTA = 30*180/PI
 MAX_DUTY_CYCLE = 4000
 MAX_SPEED = 0.3
 
@@ -57,7 +58,7 @@ def callback(data):
 	elif data.throttle <= -MAX_DUTY_CYCLE:
 		th = MAX_DUTY_CYCLE
 
-	steer = data.steering*180/np.pi
+	steer = data.steering*180/PI
 	if steer > MAX_DELTA:
 		steer = MAX_DELTA
 	elif steer < -MAX_DELTA:

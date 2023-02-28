@@ -110,8 +110,8 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES minicar
+ #INCLUDE_DIRS include
+  #LIBRARIES
   CATKIN_DEPENDS
 	roscpp
 	std_msgs
@@ -140,6 +140,7 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/minicar.cpp
 # )
+FIND_LIBRARY(pca9685_LIB pca9685 ./include/lib-pca9685/lib_linux/)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -153,16 +154,20 @@ include_directories(
 add_executable(controller src/control.cpp)
 add_executable(listener src/listener.cpp)
 add_executable(localization src/btsSensors.cpp)
+add_executable(motorsManager src/motorsManager.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
 # set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
+set_target_properties(motorsManager PROPERTIES COMPILE_FLAGS "-lbcm2835 -lwiringPi -lpca9685")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(controller minicar_generate_messages_cpp)
+add_dependencies(localization minicar_generate_messages_cpp)
 
 #FIND_LIBRARY(BOOST_LIBRARY Boost /catkin_ws/src/minicar/include/boost_1_81_0)
 
@@ -179,6 +184,12 @@ target_link_libraries(localization
   ${catkin_LIBRARIES}
   #${BOOST_LIBRARY}
 )
+target_link_libraries(motorsManager
+  ${catkin_LIBRARIES}
+  ${pca9685_LIB}
+  wiringPi
+  bcm2835
+)
 
 #############
 ## Install ##
@@ -189,9 +200,9 @@ target_link_libraries(localization
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-catkin_install_python(PROGRAMS scripts/motorManager.py scripts/laneDetection.py
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+#catkin_install_python(PROGRAMS scripts/motorManager.py scripts/laneDetection.py
+#  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+#)
 
 
 ## Mark executables for installation

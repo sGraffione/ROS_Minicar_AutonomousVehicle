@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cstring>
+#include <iostream>
+#include <fstream>
 
 #include <fcntl.h>
 #include <errno.h>
@@ -17,14 +19,14 @@
 #define POSITION_STRING_OFFSET 3
 #define BUFFER_SIZE 256
 
-float Ts = 0.2;
+float Ts = 0.1;
 
 int main(int argc, char **argv){
 	ROS_INFO("Init ROS");
 	ros::init(argc, argv, "localization");
 	ros::NodeHandle n;
 	ROS_INFO("Connected to roscore");
-	ros::Publisher current_pub = n.advertise<minicar::BtsData>("position",10);
+	ros::Publisher current_pub = n.advertise<minicar::BtsData>("position",1);
 	
 	ros::Rate loop_rate(1/Ts);
 	
@@ -96,7 +98,12 @@ int main(int argc, char **argv){
 	char *token;
 	int brack1_pos = 0;
 	int brack2_pos = 0;
-	
+
+	std::ofstream logFile;
+logFile.open("/home/pi/state.dat", std::ios::out | std::ios::binary);
+	std::stringstream strDatFile(std::stringstream::out | std::stringstream::binary);
+
+	ros::Duration(2).sleep();
 	ROS_INFO("Start reading from device");
 	while(ros::ok()){
 
@@ -148,11 +155,16 @@ int main(int argc, char **argv){
 		}
 		ROS_INFO("Position: [%f %f]",btsData.position[0],btsData.position[1]);
 		current_pub.publish(btsData);
-		
+
+		std::string str = std::to_string(btsData.position[0]) + " " + std::to_string(btsData.position[1]);
+		strDatFile << str << std::endl;
+
 		ros::spinOnce();
 		
 		loop_rate.sleep();
 	}
 	close(serial_port);
+	logFile.write(strDatFile.str().c_str(), strDatFile.str().length());
+	logFile.close();
 	return 0;
 }
