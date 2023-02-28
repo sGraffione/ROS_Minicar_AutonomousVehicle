@@ -111,6 +111,11 @@ class motorsInterface {
 		this->pca9685.Write(CHANNEL(ENA),VALUE(0));
 		this->pca9685.Write(CHANNEL(ENB),VALUE(0));
 		this->servo.SetAngle(CHANNEL(15), ANGLE(CENTER));
+		pinMode(IN1,INPUT);
+		pinMode(IN2,INPUT);
+		pinMode(IN3,INPUT);
+		pinMode(IN4,INPUT);
+		
 	}
 	
 };
