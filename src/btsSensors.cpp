@@ -100,7 +100,7 @@ int main(int argc, char **argv){
 	int brack2_pos = 0;
 
 	std::ofstream logFile;
-logFile.open("/home/pi/state.dat", std::ios::out | std::ios::binary);
+	logFile.open("/home/pi/state.dat", std::ios::out | std::ios::binary);
 	std::stringstream strDatFile(std::stringstream::out | std::stringstream::binary);
 
 	ros::Duration(2).sleep();

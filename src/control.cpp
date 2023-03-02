@@ -2,6 +2,7 @@
 #include "std_msgs/String.h"
 #include "minicar/Motors.h"
 #include "minicar/BtsData.h"
+#include "minicar/accel.h"
 #include "std_msgs/Float64MultiArray.h"
 #include "geometry_msgs/Twist.h"
 #include "nav_msgs/Odometry.h"
@@ -36,28 +37,13 @@ int leftMotor = 23;
 int dirLeftMotor = 24;
 float Ts = 0.1;
 float position[3];
-double roll = 0, pitch = 0, yaw = M_PI_2;
+double roll = 0, pitch = 0, yaw = 0;
 //double MAX_DELTA_RATE = (M_PI/3*Ts)/0.17; // computation based on datasheet of MG996R servo motor
 
 double L = 0.14;
 
-
-void stateUpdate(Eigen::MatrixXd &state, float speed, float delta){
-	state(0,0) = state(0,0)+Ts*speed*cos(state(2,0));
-	state(1,0) = state(1,0)+Ts*speed*sin(state(2,0));
-	state(2,0) = state(2,0)+Ts*(speed*tan(delta)/L);
-}
-
-void linearizeSystem(Eigen::MatrixXd X, double v_lin, double delta_lin, Eigen::MatrixXd &Ad, Eigen::MatrixXd &Bd){
-	Ad(0,0) = 1;
-	Ad(0,2) = -(v_lin*sin(X(2)))/10;
-	Ad(1,1) = 1;
-	Ad(1,2) = v_lin*cos(X(2))/10;
-	Ad(2,2) = 1;
-	Bd(0,0) = cos(X(2))/10;
-	Bd(1,0) = sin(X(2))/10;
-	Bd(2,0) = (5*tan(delta_lin))/7;
-	Bd(2,1) = (5*v_lin*(tan(delta_lin)*tan(delta_lin) + 1))/7;
+void accelCallback(const minicar::accel& msg){
+	yaw = msg.yaw;
 }
 
 void positionCallback(const minicar::BtsData& msg){
@@ -334,6 +320,8 @@ int main(int argc, char **argv){
 	ros::Subscriber sub = n.subscribe("position",1,positionCallback);
 	//ros::Subscriber sub = n.subscribe("/localization/state",1,gazeboPositionCallback);
 	
+	ros::Subscriber subYaw = n.subscribe("accelerometer",1,accelCallback);
+	
 	ros::Rate loop_rate(1/Ts);
 	
 	double lr = 0.07;
@@ -525,8 +513,6 @@ int main(int argc, char **argv){
 
 		Vel_opt = v_init.at(3);
 		delta_opt = v_init.at(4);
-		
-		yaw = v_init.at(2);
 
 		// Get the optimal control
 		Vel_rate_opt = V_opt.at(nx);
