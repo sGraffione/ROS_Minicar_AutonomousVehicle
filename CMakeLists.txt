@@ -58,6 +58,7 @@ roslaunch_add_file_check(launch)
    Motors.msg
    BtsData.msg
    LaneDetection.msg
+   accel.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -141,6 +142,7 @@ include_directories(
 #   src/${PROJECT_NAME}/minicar.cpp
 # )
 FIND_LIBRARY(pca9685_LIB pca9685 ./include/lib-pca9685/lib_linux/)
+FIND_LIBRARY(MPU6050_LIB MPU6050 ./include/MPU6050/)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -155,6 +157,7 @@ add_executable(controller src/control.cpp)
 add_executable(listener src/listener.cpp)
 add_executable(localization src/btsSensors.cpp)
 add_executable(motorsManager src/motorsManager.cpp)
+add_executable(accelerometer src/accelerometer.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -162,12 +165,14 @@ add_executable(motorsManager src/motorsManager.cpp)
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
 # set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 set_target_properties(motorsManager PROPERTIES COMPILE_FLAGS "-lbcm2835 -lwiringPi -lpca9685")
+set_target_properties(accelerometer PROPERTIES COMPILE_FLAGS "-lMPU6050 -lpthread")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(controller minicar_generate_messages_cpp)
 add_dependencies(localization minicar_generate_messages_cpp)
+add_dependencies(accelerometer minicar_generate_messages_cpp)
 
 #FIND_LIBRARY(BOOST_LIBRARY Boost /catkin_ws/src/minicar/include/boost_1_81_0)
 
@@ -189,6 +194,10 @@ target_link_libraries(motorsManager
   ${pca9685_LIB}
   wiringPi
   bcm2835
+)
+target_link_libraries(accelerometer
+	${catkin_LIBRARIES}
+	${MPU6050_LIB}
 )
 
 #############
