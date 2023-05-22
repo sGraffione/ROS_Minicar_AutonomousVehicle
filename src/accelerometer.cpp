@@ -9,11 +9,7 @@
 #include <cstdlib>
 #include <chrono>
 
-double Ts = 0.05;
-
-void readGyro(int, offset, int offsetAx, int offsetAy, int sensorPos1){
-	
-}
+double Ts = 0.1;
 
 int main(int argc, char **argv){
 	ros::init(argc, argv, "accelerometer");
@@ -25,7 +21,7 @@ int main(int argc, char **argv){
 	
 	MPU6050 device(0x68);
 	float ax, ay, az, gr, gp, gy, omega; //Variables to store the accel, gyro and angle values
-	float yaw = 0;
+	float omega = 0;
 	sleep(1); //Wait for the MPU6050 to stabilize
 	
 	
@@ -34,13 +30,13 @@ int main(int argc, char **argv){
 	/*std::ofstream logFile;
 	logFile.open("/home/pi/accel.dat", std::ios::out | std::ios::binary);
 	std::stringstream strDatFile(std::stringstream::out | std::stringstream::binary);
-*/
-	// Read Yaw initial condition
+
+	 Read Yaw initial condition
 	if (n.hasParam("/accelerometer/yaw")){
 		n.getParam("/accelerometer/yaw", yaw);
 	}else{
 		yaw = 0.0;
-	}
+	}*/
 	
 	/*Gyroscope drift calibration*/
 	std::vector<double> gyVect, axVect, ayVect;

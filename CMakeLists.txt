@@ -59,6 +59,7 @@ roslaunch_add_file_check(launch)
    BtsData.msg
    LaneDetection.msg
    accel.msg
+   EKFstate.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -158,6 +159,7 @@ add_executable(listener src/listener.cpp)
 add_executable(localization src/btsSensors.cpp)
 add_executable(motorsManager src/motorsManager.cpp)
 add_executable(accelerometer src/accelerometer.cpp)
+add_executable(kalmanFilter src/EKF.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -173,6 +175,7 @@ set_target_properties(accelerometer PROPERTIES COMPILE_FLAGS "-lMPU6050 -lpthrea
 add_dependencies(controller minicar_generate_messages_cpp)
 add_dependencies(localization minicar_generate_messages_cpp)
 add_dependencies(accelerometer minicar_generate_messages_cpp)
+add_dependencies(kalmanFilter minicar_generate_messages_cpp)
 
 #FIND_LIBRARY(BOOST_LIBRARY Boost /catkin_ws/src/minicar/include/boost_1_81_0)
 
@@ -198,6 +201,9 @@ target_link_libraries(motorsManager
 target_link_libraries(accelerometer
 	${catkin_LIBRARIES}
 	${MPU6050_LIB}
+)
+target_link_libraries(kalmanFilter
+	${catkin_LIBRARIES}
 )
 
 #############

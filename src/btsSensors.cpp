@@ -99,9 +99,9 @@ int main(int argc, char **argv){
 	int brack1_pos = 0;
 	int brack2_pos = 0;
 
-	std::ofstream logFile;
-	logFile.open("/home/pi/state.dat", std::ios::out | std::ios::binary);
-	std::stringstream strDatFile(std::stringstream::out | std::stringstream::binary);
+	//std::ofstream logFile;
+	//logFile.open("/home/pi/state.dat", std::ios::out | std::ios::binary);
+	//std::stringstream strDatFile(std::stringstream::out | std::stringstream::binary);
 
 	ros::Duration(2).sleep();
 	ROS_INFO("Start reading from device");
@@ -156,15 +156,15 @@ int main(int argc, char **argv){
 		ROS_INFO("Position: [%f %f]",btsData.position[0],btsData.position[1]);
 		current_pub.publish(btsData);
 
-		std::string str = std::to_string(btsData.position[0]) + " " + std::to_string(btsData.position[1]);
-		strDatFile << str << std::endl;
+		//std::string str = std::to_string(btsData.position[0]) + " " + std::to_string(btsData.position[1]);
+		//strDatFile << str << std::endl;
 
 		ros::spinOnce();
 		
 		loop_rate.sleep();
 	}
 	close(serial_port);
-	logFile.write(strDatFile.str().c_str(), strDatFile.str().length());
-	logFile.close();
+	//logFile.write(strDatFile.str().c_str(), strDatFile.str().length());
+	//logFile.close();
 	return 0;
 }

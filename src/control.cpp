@@ -24,7 +24,7 @@
 #define MAX_DUTY_CYCLE 4000
 #define MAX_DELTA 0.523599
 #define MAX_DELTA_RATE 0.1
-#define GAMMA_STEER 40/30
+#define GAMMA_STEER 30/30
 //LQT horizon
 #define T 5
 #define T_LESS_1 4
@@ -42,15 +42,11 @@ double roll = 0, pitch = 0, yaw = 0;
 
 double L = 0.14;
 
-void accelCallback(const minicar::accel& msg){
-	yaw = msg.yaw;
-}
-
-void positionCallback(const minicar::BtsData& msg){
+void stateCallback(const minicar::EKFstate& msg){
 	//ROS_INFO("Position: [%f %f %f] (%i)", msg.position[0],msg.position[1],msg.position[2],msg.quality);
-	position[0] = msg.position[0];
-	position[1] = msg.position[1];
-	position[2] = msg.position[2];
+	position[0] = msg.X[0];
+	position[1] = msg.X[1];
+	yaw = msg.X[2];
 }
 void gazeboPositionCallback(const nav_msgs::Odometry& msg){
 	
@@ -317,10 +313,8 @@ int main(int argc, char **argv){
 	//ros::Publisher current_pub_drive = n.advertise<geometry_msgs::Twist>("/minicar_driving_controller/cmd_vel",1);
 	//ros::Publisher current_pub_steer = n.advertise<std_msgs::Float64MultiArray>("/minicar_steer_controller/command",1);
 	
-	ros::Subscriber sub = n.subscribe("position",1,positionCallback);
+	ros::Subscriber sub = n.subscribe("EKFstate",1,stateCallback);
 	//ros::Subscriber sub = n.subscribe("/localization/state",1,gazeboPositionCallback);
-	
-	ros::Subscriber subYaw = n.subscribe("accelerometer",1,accelCallback);
 	
 	ros::Rate loop_rate(1/Ts);
 	
@@ -468,8 +462,8 @@ int main(int argc, char **argv){
 	int cols = 4; 
 
 	double waypoints[rows][cols] = {{0.6, 2.4, M_PI_2, 0.2},
-									{0.6, 4.8, M_PI/4,    0.2},
-									{2.0, 4.5, 0.0,    0.0}};
+					{0.8, 4.8, M_PI/4,    0.2},
+					{2.0, 4.8, 0.0,    0.0}};
 	int indexWP = 0;
 	
 	ROS_INFO("Target (%f %f)",waypoints[indexWP][0],waypoints[indexWP][1]);
@@ -481,8 +475,8 @@ int main(int argc, char **argv){
 	double delta_opt = 0.0, Vel_opt = 0.0, delta_rate_opt = 0.0, Vel_rate_opt = 0.0;
 
 	// Sleep for 5 second before starting. It gives time to gazebo to open.
-	for (int i = 0; i < 5; i++){
-		ROS_INFO("Starting in %i",5-i);
+	for (int i = 0; i < 10; i++){
+		ROS_INFO("Starting in %i",10-i);
 		ros::Duration(1).sleep();
 	}
 
