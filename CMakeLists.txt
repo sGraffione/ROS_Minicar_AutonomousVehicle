@@ -204,6 +204,8 @@ target_link_libraries(accelerometer
 )
 target_link_libraries(kalmanFilter
 	${catkin_LIBRARIES}
+	${Eigen_LIBRARIES}
+	${BOOST_LIBRARY}
 )
 
 #############

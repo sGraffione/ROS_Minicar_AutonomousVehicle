@@ -1,1 +1,1 @@
-float32 state[6]
+float32[6] state
