@@ -70,6 +70,7 @@ If you have any library of i2c missing, it means that you have to check if you h
 First, install these packages
 ```
 sudo apt install -y i2c-tools python3-smbus
+sudo apt install libi2c-dev
 ```
 Then, run the command
 ```
@@ -79,3 +80,10 @@ Go to ```5 Interfacing options```, select ```I2C``` and choose ```Enable```
 
 Finally, reboot your system to apply changes.
 
+**Missing MPU6050.h**
+
+To correct this error, go to the include folder and run the commands
+```
+make all
+sudo make install
+```
