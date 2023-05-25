@@ -87,3 +87,11 @@ To correct this error, go to the include folder and run the commands
 make all
 sudo make install
 ```
+
+**Undefined reference to ...**
+
+Try to recompile the package with the additional
+
+```
+catkin_make --force-cmake
+```
