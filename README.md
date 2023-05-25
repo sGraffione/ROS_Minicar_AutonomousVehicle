@@ -63,3 +63,19 @@ make;
 sudo make install
 ```
 
+**Missing i2c/*.h**
+
+If you have any library of i2c missing, it means that you have to check if you have installed i2c-tools and if i2c interface is enabled.
+
+First, install these packages
+```
+sudo apt install -y i2c-tools python3-smbus
+```
+Then, run the command
+```
+sudo raspi-config
+```
+Go to ```5 Interfacing options```, select ```I2C``` and choose ```Enable```
+
+Finally, reboot your system to apply changes.
+
