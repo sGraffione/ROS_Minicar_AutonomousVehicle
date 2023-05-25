@@ -27,6 +27,7 @@ cd build
 
 cmake -DWITH_PYTHON=ON -DWITH_IPOPT=true ..
 ```
+To compile Casadi is required cmake version > 3.15. To update your cmake version to the lateste one, follow [this guide](https://apt.kitware.com/).
 Now build from source and install
 ```
 make
