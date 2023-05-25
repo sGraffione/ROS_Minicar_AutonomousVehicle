@@ -19,7 +19,7 @@ sudo apt-get install coinor-libipopt-dev
 sudo apt-get install gcc g++ gfortran git cmake liblapack-dev pkg-config --install-recommends
 sudo apt-get install swig ipython python-dev python-numpy python-scipy python-matplotlib
 
-git clone https://github.com/casadi/casadi.git -b master casadi
+git clone https://github.com/casadi/casadi.git -b main casadi
 
 cd casadi
 mkdir build
