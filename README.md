@@ -48,6 +48,19 @@ sudo cp ~/Download/FindEigen.cmake .
 sudo cp ~/Download/FindCASADI.cmake .
 ```
 
+# Run commands
+
+**It is necessary to run the system as root user.**
+First, use 
+```
+sudo -s
+```
+to set the command window as root user. Then run,
+```
+roslaunch package_name minicar.launch
+```
+to run each modules and make it follows a path defined in [control.cpp](./src/control.cpp).
+
 # Common issues
 **Missing bcm2835.h**
 
