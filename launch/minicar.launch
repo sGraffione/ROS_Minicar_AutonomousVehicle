@@ -10,7 +10,8 @@
     
     <node pkg="minicar" name="motorsManager" type="motorsManager"/>
     <node pkg="minicar" name="btsSensors" type="localization"/>
-    <node pkg="minicar" name="accelerometer" type="accelerometer">
+    <node pkg="minicar" name="kalmanFilter" type="kalmanFilter">
 		<param name="yaw" type="double" value="1.57"/>
 	</node>
+	<node pkg="minicar" name="accelerometer" type="accelerometer" />
 </launch>

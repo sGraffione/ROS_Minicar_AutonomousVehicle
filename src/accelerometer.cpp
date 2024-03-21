@@ -21,12 +21,12 @@ int main(int argc, char **argv){
 	
 	MPU6050 device(0x68);
 	float ax, ay, az, gr, gp, gy, omega; //Variables to store the accel, gyro and angle values
-	float omega = 0;
+
 	sleep(1); //Wait for the MPU6050 to stabilize
 	
 	
 	ros::Rate loop_rate(1/Ts);
-	device.calc_yaw = true;
+
 	/*std::ofstream logFile;
 	logFile.open("/home/pi/accel.dat", std::ios::out | std::ios::binary);
 	std::stringstream strDatFile(std::stringstream::out | std::stringstream::binary);
@@ -57,7 +57,7 @@ int main(int argc, char **argv){
 	float offset = (std::accumulate(gyVect.begin(),gyVect.end(),0.0)/gyVect.size())*M_PI/180;
 	float offsetAx = (std::accumulate(axVect.begin(),axVect.end(),0.0)/axVect.size())*M_PI/180;
 	float offsetAy = (std::accumulate(ayVect.begin(),ayVect.end(),0.0)/ayVect.size())*M_PI/180;
-	
+	ROS_INFO("Done!\n Running...");
 	while(ros::ok()){
 		
 		ros::spinOnce();
@@ -67,7 +67,7 @@ int main(int argc, char **argv){
 		float accelx, accely;
 		
 		device.getGyroRaw(&gr, &gp, &gy);
-		device.getAccelRaw(&ar, &ap, &ay);
+		device.getAccelRaw(&ax, &ay, &az);
 		omega = (round((gy-offset)*10000 / GYRO_SENS)/10000)*M_PI/180;
 		accelx = (round((ax-offsetAx)*10000 / ACCEL_SENS)/10000)*9.81;
 		accely = (round((ay-offsetAy)*10000 / ACCEL_SENS)/10000)*9.81;

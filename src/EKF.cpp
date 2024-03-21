@@ -18,19 +18,23 @@
 #include <vector> 
 #include <sstream>
 #include <eigen3/Eigen/Dense>
+#include <boost/cstdint.hpp>
  
 using Eigen::MatrixXd;
 
-double x,y,acc,vel_yaw;
+float x,y,acc,vel_yaw;
+float Ts = 0.1;
 
 void positionCallback(const minicar::BtsData& msg){
 	x = msg.position[0];
 	y = msg.position[1];
+	ROS_INFO("x: %f - y: %f",x,y);
 }
 
 void accelerometerCallback(const minicar::accel& msg){
 	vel_yaw = msg.omega;
-	accel = msg.xAccel;
+	acc = msg.xAccel;
+	ROS_INFO("omega: %f - acc: %f",vel_yaw,acc);
 }
 
 //Compute the jacobian 
@@ -65,7 +69,7 @@ Eigen::VectorXd X_values(Eigen::VectorXd Xprev,double dt,Eigen::VectorXd u){
 }
 
 
-int main()
+int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "EKF");
 	ROS_INFO("Connected to roscore");
@@ -75,6 +79,8 @@ int main()
 	
 	ros::Subscriber subPos = n.subscribe("position",1,positionCallback);
 	ros::Subscriber subAccel = n.subscribe("accelerometer",1,accelerometerCallback);
+	
+	ros::Rate loop_rate(1/Ts);
   
     Eigen::MatrixXd B(2,6);
     Eigen::MatrixXd C(4,6);
@@ -98,8 +104,15 @@ int main()
        0,0,0,0,1,0,
        0,0,0,0,0,1;
 
+	float yaw;
+	if (n.hasParam("/accelerometer/yaw")){
+		n.getParam("/accelerometer/yaw", yaw);
+	}else{
+		yaw = 0.0;
+	}
+
    //Initial values
-    X_zero << 0.6,1.2,1.5708,0,0,0;
+    X_zero << 0,0,yaw,0,0,0;
     X=X_zero;
 
     //Covariances matrices
@@ -131,14 +144,17 @@ int main()
 
 	Eigen::VectorXd z(4);
 	Eigen::VectorXd u(2);
+	minicar::EKFstate::_state_type tempXArray;
 
 	//EKF init
 	K=P*C.transpose()*(C*P*C.transpose()+R).inverse();
 	while(ros::ok()){
+		ros::spinOnce();
 	   
 		//EKF
 		z<<x,y,acc,vel_yaw;
 		u<<acc,vel_yaw;
+		//ROS_INFO("(%f %f) - %f", x,y,vel_yaw);
 		
 		X=X_values(X,Ts,u);
 		J = J_function(X,Ts);
@@ -146,8 +162,13 @@ int main()
 		K=P*C.transpose()*(C*P*C.transpose()+R).inverse();
 		X=X+K*(z-C*X);
 		P=(Id-K*C)*P*(Id-K*C).transpose()+K*R*K.transpose();
+		ROS_INFO("(%f %f) - %f", X(0), X(1), X(2));
+		double* dataPtr = X.data();
+		for(int i = 0; i < X.size(); ++i){
+			tempXArray[i] = static_cast<float>(dataPtr[i]);
+		}
+		estState.state = tempXArray;
 		
-		estState.state = X.data();
 		current_pub.publish(estState);
 		
 		loop_rate.sleep();
