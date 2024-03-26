@@ -26,7 +26,7 @@
 #define MAX_DELTA 0.523599
 #define MAX_DELTA_RATE 0.1
 #define GAMMA_STEER 30/30
-//LQT horizon
+//LQT horizon (unused)
 #define T 5
 #define T_LESS_1 4
 #define Np 15
@@ -34,8 +34,11 @@
 
 using namespace casadi;
 
+// Motor pin configuration
 int leftMotor = 23;
 int dirLeftMotor = 24;
+
+// General parameters and state variables init
 float Ts = 0.1;
 float position[3];
 float roll = 0, pitch = 0, yaw = 0;
@@ -43,18 +46,20 @@ float roll = 0, pitch = 0, yaw = 0;
 
 double L = 0.14;
 
+// This function reads the message coming from the Kalman Filter node
 void stateCallback(const minicar::EKFstate& msg){
 	position[0] = msg.state[0];
 	position[1] = msg.state[1];
 	yaw = msg.state[2];
 	//ROS_INFO("(%f %f) - %f", position[0], position[1], yaw);
 }
+
+// This function reads the odometry message during Gazebo simulation (it requires to set the correct topic in the main function)
 void gazeboPositionCallback(const nav_msgs::Odometry& msg){
-	
 	position[0] = msg.pose.pose.position.x;
 	position[1] = msg.pose.pose.position.y;
 	position[2] = msg.pose.pose.position.z;
-    double x = msg.pose.pose.orientation.x;
+	double x = msg.pose.pose.orientation.x;
 	double y = msg.pose.pose.orientation.y;
 	double z = msg.pose.pose.orientation.z;
 	double w = msg.pose.pose.orientation.w;
@@ -76,22 +81,33 @@ void gazeboPositionCallback(const nav_msgs::Odometry& msg){
 }
 
 int main(int argc, char **argv){
+	// Initialization of Roscore Node
 	ros::init(argc, argv, "controller");
 	ROS_INFO("Connected to roscore");
 	ros::NodeHandle n;
+	
+	// Define publisher to send controls to the MotorManager Node
 	ros::Publisher current_pub = n.advertise<minicar::Motors>("motorsCtrl",1);
+
+	// Define publisher to control the minicar when using Gazebo (comment out the previous message) TODO: to automate using paramenters with roslaunch
 	//ros::Publisher current_pub_drive = n.advertise<geometry_msgs::Twist>("/minicar_driving_controller/cmd_vel",1);
 	//ros::Publisher current_pub_steer = n.advertise<std_msgs::Float64MultiArray>("/minicar_steer_controller/command",1);
-	
+
+	// Define subscriber to receive improved localization with Kalman Filter
 	ros::Subscriber sub = n.subscribe("EKFstate",1,stateCallback);
+
+	// Define subscriber to receive localization when using Gazebo
 	//ros::Subscriber sub = n.subscribe("/localization/state",1,gazeboPositionCallback);
-	
+
+	// Definition of sample time
 	ros::Rate loop_rate(1/Ts);
-	
+
+	// Vehicle parameters (meters)
 	double lr = 0.07;
 	double lf = 0.07;
 	double width = 0.11;
 
+	// Reading of parameters from launch files
 	double q1,q2,q3,q4,q5,r1,r2;
 	n.getParam("/controller/q1", q1);
 	n.getParam("/controller/q2", q2);
@@ -100,11 +116,13 @@ int main(int argc, char **argv){
 	n.getParam("/controller/q3", q5);
 	n.getParam("/controller/r1", r1);
 	n.getParam("/controller/r2", r2);
-	
+
+	// Vehicle initial state TODO: use parameters from launch files
 	double X_init = 0.6;
 	double Y_init = 0.0;
 	double theta_init = M_PI_2;
 
+	// Initialization of Eigen matrices
 	MX X = MX::sym("X", 1);
 	MX Y = MX::sym("Y", 1);
 	MX theta = MX::sym("theta", 1);
@@ -143,6 +161,7 @@ int main(int argc, char **argv){
 	
 	MXDict dae = {{"x",state},{"p",controls},{"ode",rhs}}; // build a dictionary containing state, control and equations vector
 
+	// Definition of state function
 	Function f = Function("f",{state,controls},{rhs});
 	
 	MX P = MX::sym("P",nx+nx,1);
@@ -252,6 +271,7 @@ int main(int argc, char **argv){
 
 	std::vector<double> P_nlp;
 
+	// ROS MAIN LOOP
 	while(ros::ok()){
 		
 		ros::spinOnce();
@@ -281,11 +301,12 @@ int main(int argc, char **argv){
 		// Get the optimal control
 		Vel_rate_opt = V_opt.at(nx);
 		delta_rate_opt = V_opt.at(nx+1);
-		
+
+		// DEBUG PRINTS
 		//ROS_INFO("state: [%f %f %f]\n\t\t\t\t position: [%f %f]",Vel_opt,delta_opt,yaw,position[0],position[1]);
 		//ROS_INFO("Optimal control [%f %f]",Vel_rate_opt,delta_rate_opt);
 
-		// Compute left and right steer angle according to an ackermann steering system to have a more accurate simulation
+		// Compute left and right steer angles according to an Ackermann steering system to have a more accurate simulation
 		// TO COMMENT OUT WHEN USED ON REAL MINICAR
 		//ROS_INFO("[%f %f]", Vel_opt, delta_opt);
 		/*
@@ -306,10 +327,14 @@ int main(int argc, char **argv){
 		current_pub_steer.publish(cmdS);
 		current_pub_drive.publish(cmdV);
 		*/
+		
 		motorsCtrl.throttle = Vel_opt;
 		motorsCtrl.steering = delta_opt;
+
+		// Generation of the message to send to MotorsManager node
 		current_pub.publish(motorsCtrl);
-		
+
+		// Check if the waypoint has been reached
 		double dist = sqrt(pow(position[0]-waypoints[indexWP][0],2)+pow(position[1]-waypoints[indexWP][1],2));
 		if(dist < 0.3){
 			if(indexWP < rows-1){
@@ -317,7 +342,8 @@ int main(int argc, char **argv){
 				ROS_INFO("Target (%f %f)",waypoints[indexWP][0],waypoints[indexWP][1]);
 			}
 		}
-		
+
+		// Pause the execution based on the loop_rate
 		loop_rate.sleep();
 	}
 	
