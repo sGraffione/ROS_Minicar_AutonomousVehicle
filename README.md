@@ -3,7 +3,7 @@ Implementation of Autonomous system with ROS on a Minicar provided of a Raspberr
 ## Dependencies
 - Ubuntu (or similar) 18.04
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
-- [WiringPi][https://github.com/WiringPi/WiringPi] for Raspberry Pi 3
+- [WiringPi](https://github.com/WiringPi/WiringPi) for Raspberry Pi 3
 - Eigen3 (included in ROS)
 - [Casadi](https://github.com/casadi/casadi)
 
