@@ -110,7 +110,9 @@ catkin_make --force-cmake
 ```
 
 **WiFi module missing**
+
 If the WiFi module is not detected, first check with
+
 ```
 dmesg | grep mmc1
 ```
@@ -120,4 +122,5 @@ It can happen to have missing files. If the command returns a missing firmware l
 ```
 sudo nano /lib/firmware/brcm/brcmfmac43430-sdio.txt
 ```
+
 and paste the content from the previous link.
