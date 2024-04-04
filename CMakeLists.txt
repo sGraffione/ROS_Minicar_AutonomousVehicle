@@ -21,7 +21,7 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(cmake_modules REQUIRED)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(Eigen3 REQUIRED)
-find_package(CASADI REQUIRED)
+#find_package(CASADI REQUIRED)
 roslaunch_add_file_check(launch)
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -121,7 +121,7 @@ catkin_package(
 	message_runtime
   DEPENDS
 	EIGEN3
-	CASADI
+#	CASADI
 #  DEPENDS system_lib
 )
 
@@ -135,7 +135,7 @@ include_directories(
   include
   ${catkin_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}
-  ${CASADI_INCLUDE_DIRS}
+ # ${CASADI_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -183,7 +183,7 @@ add_dependencies(kalmanFilter minicar_generate_messages_cpp)
 target_link_libraries(controller
   ${catkin_LIBRARIES}
   ${Eigen_LIBRARIES}
-  ${CASADI_LIBRARIES}
+#  ${CASADI_LIBRARIES}
 )
 target_link_libraries(listener
   ${catkin_LIBRARIES}
