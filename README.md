@@ -27,7 +27,7 @@ cd build
 
 cmake -DWITH_PYTHON=ON -DWITH_IPOPT=true ..
 ```
-*To compile Casadi is required cmake version > 3.15. To update your cmake version to the lateste one, follow [this guide](https://apt.kitware.com/).*
+*To compile Casadi, it is required cmake version > 3.15. To update your cmake version to the latest one, follow [this guide](https://apt.kitware.com/).*
 
 Now build from source and install
 ```
@@ -35,7 +35,7 @@ make
 sudo make install
 ```
 
-Full installantion guide at https://github.com/casadi/casadi/wiki/InstallationLinux
+Full installation guide at https://github.com/casadi/casadi/wiki/InstallationLinux
 
 
 **Download cmake files from [use_ext_libraries](/use_ext_libraries) directory**
@@ -44,13 +44,13 @@ Open a terminal
 
 ```
 cd /opt/ros/melodic/share/cmake_modules/cmake/Modules/
-sudo cp ~/Download/FindEigen.cmake .
-sudo cp ~/Download/FindCASADI.cmake .
+sudo cp ~/Downloads/FindEigen.cmake .
+sudo cp ~/Downloads/FindCASADI.cmake .
 ```
 
 # Run commands
 
-**It is necessary to run the system as root user.**
+**It is necessary to run the system as the root user.**
 First, use 
 ```
 sudo -s
@@ -59,7 +59,7 @@ to set the command window as root user. Then run,
 ```
 roslaunch package_name minicar.launch
 ```
-to run each modules and make it follows a path defined in [control.cpp](./src/control.cpp).
+to run each module and make it follow a path defined in [control.cpp](./src/control.cpp).
 
 # Common issues
 **Missing bcm2835.h**
