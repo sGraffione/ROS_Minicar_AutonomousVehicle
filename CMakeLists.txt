@@ -190,7 +190,7 @@ target_link_libraries(listener
 )
 target_link_libraries(localization
   ${catkin_LIBRARIES}
-  #${BOOST_LIBRARY}
+  ${BOOST_LIBRARY}
 )
 target_link_libraries(motorsManager
   ${catkin_LIBRARIES}
