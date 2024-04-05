@@ -124,3 +124,8 @@ sudo nano /lib/firmware/brcm/brcmfmac43430-sdio.txt
 ```
 
 and paste the content from the previous link.
+
+**Raspi-Config does something weird**
+
+If the ```raspi-config``` works but the selection of the menu does not work properly, update and/or reinstall ```raspi-config```. The compatibility between raspi-config and Ubuntu is not assured, but this utility tool could be useful for a fast setting of your Raspberry Pi board.
+To update/install raspi-config, follow the instructions at this [page](https://dexterexplains.com/r/20211030-how-to-install-raspi-config-on-ubuntu)
