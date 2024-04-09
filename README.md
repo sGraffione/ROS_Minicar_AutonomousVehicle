@@ -3,7 +3,7 @@ Implementation of Autonomous system with ROS on a Minicar provided of a Raspberr
 ## Dependencies
 - Ubuntu (or similar) 18.04
 - [ROS Melodic](http://wiki.ros.org/melodic/Installation/Ubuntu)
-- [WiringPi](https://github.com/WiringPi/WiringPi/tree/final_official_2.50) for Raspberry Pi 3
+- [pigpio](https://abyz.me.uk/rpi/pigpio/) for Raspberry Pi 3
 - Eigen3 (included in ROS)
 - [Casadi](https://github.com/casadi/casadi)
 
@@ -27,7 +27,7 @@ cd build
 
 cmake -DWITH_PYTHON=ON -DWITH_IPOPT=true ..
 ```
-*To compile Casadi is required cmake version > 3.15. To update your cmake version to the lateste one, follow [this guide](https://apt.kitware.com/).*
+*To compile Casadi, it is required cmake version > 3.15. To update your cmake version to the latest one, follow [this guide](https://apt.kitware.com/).*
 
 Now build from source and install
 ```
@@ -35,7 +35,7 @@ make
 sudo make install
 ```
 
-Full installantion guide at https://github.com/casadi/casadi/wiki/InstallationLinux
+Full installation guide at https://github.com/casadi/casadi/wiki/InstallationLinux
 
 
 **Download cmake files from [use_ext_libraries](/use_ext_libraries) directory**
@@ -44,13 +44,13 @@ Open a terminal
 
 ```
 cd /opt/ros/melodic/share/cmake_modules/cmake/Modules/
-sudo cp ~/Download/FindEigen.cmake .
-sudo cp ~/Download/FindCASADI.cmake .
+sudo cp ~/Downloads/FindEigen.cmake .
+sudo cp ~/Downloads/FindCASADI.cmake .
 ```
 
 # Run commands
 
-**It is necessary to run the system as root user.**
+**It is necessary to run the system as the root user.**
 First, use 
 ```
 sudo -s
@@ -59,7 +59,7 @@ to set the command window as root user. Then run,
 ```
 roslaunch package_name minicar.launch
 ```
-to run each modules and make it follows a path defined in [control.cpp](./src/control.cpp).
+to run each module and make it follow a path defined in [control.cpp](./src/control.cpp).
 
 # Common issues
 **Missing bcm2835.h**
@@ -108,3 +108,24 @@ Try to recompile the package with the additional
 ```
 catkin_make --force-cmake
 ```
+
+**WiFi module missing**
+
+If the WiFi module is not detected, first check with
+
+```
+dmesg | grep mmc1
+```
+
+It can happen to have missing files. If the command returns a missing firmware like the ```brcm/brcmfmac43430-sdio.txt``` you need to copy the file from [here](https://github.com/armbian/firmware/blob/master/brcm/brcmfmac43430-sdio.txt) and create a new file in ```brcm``` folder:
+
+```
+sudo nano /lib/firmware/brcm/brcmfmac43430-sdio.txt
+```
+
+and paste the content from the previous link.
+
+**Raspi-Config does something weird**
+
+If the ```raspi-config``` works but the selection of the menu does not work properly, update and/or reinstall ```raspi-config```. The compatibility between raspi-config and Ubuntu is not assured, but this utility tool could be useful for a fast setting of your Raspberry Pi board.
+To update/install raspi-config, follow the instructions at this [page](https://dexterexplains.com/r/20211030-how-to-install-raspi-config-on-ubuntu)
