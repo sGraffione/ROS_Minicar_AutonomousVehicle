@@ -18,7 +18,6 @@
 
 #include <eigen3/Eigen/Dense>
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
-#include <casadi/casadi.hpp>
 
 #define MAX_SPEED 0.3
 #define MAX_SPEED_RATE 0.05 // tuned by hand
@@ -32,7 +31,6 @@
 #define Np 15
 #define Nc 5
 
-using namespace casadi;
 
 // Motor pin configuration
 int leftMotor = 23;
@@ -121,7 +119,8 @@ int main(int argc, char **argv){
 	double X_init = 0.6;
 	double Y_init = 0.0;
 	double theta_init = M_PI_2;
-
+	
+	minicar::Motors motorsCtrl;
 
 	// Sleep for 10 seconds before starting. It gives time for Gazebo to open.
 	for (int i = 0; i < 10; i++){
@@ -134,6 +133,8 @@ int main(int argc, char **argv){
 		
 		ros::spinOnce();
 
+		//motorsCtrl.throttle = 0.3;
+		//motorsCtrl.steering = 0;
 
 		
 		// Compute left and right steer angles according to an Ackermann steering system to have a more accurate simulation
@@ -162,7 +163,7 @@ int main(int argc, char **argv){
 		
 
 		// Generation of the message to send to MotorsManager node
-		current_pub.publish(motorsCtrl);
+		//current_pub.publish(motorsCtrl);
 
 
 		// Pause the execution based on the loop_rate

@@ -7,61 +7,52 @@
 #include <cstdint>
 #include <unistd.h>
 #include <math.h>
-#include <wiringPi.h>
 
 #include "bcm2835.h"
 #include "lib-pca9685/include/pca9685servo.h"
+#include <pigpio.h>
 
 // WiringPi PinOut
-#define IN1 4 // LEFT
-#define IN2 5 // LEFT
-#define IN3 3 // RIGHT
-#define IN4 2  // RIGHT
-// BCM PinOut
-#define INbcm1 19 // LEFT
-#define INbcm2 13 // LEFT
-#define INbcm3 6 // RIGHT
-#define INbcm4 16  // RIGHT
+#define IN1 23 // RIGHT FORWARD - board pin 13
+#define IN2 24 // RIGHT BACKWARD - board pin 15
+#define IN3 27 // LEFT FORWARD - board pin 18
+#define IN4 22  // LEFT BACKWARD - board pin 16
 
 #define ENA 0  // LEFT
 #define ENB 1  // RIGHT
 
 #define CENTER 63
-#define MAX_DELTA 30*180/M_PI
+#define MAX_DELTA 25*M_PI/180 //degree* pi/180 = radians
 #define MAX_DUTY_CYCLE 4000
 #define MAX_SPEED 0.3
 
 class motorsInterface {
 	public:
 		int bcmRes = bcm2835_init();
-		int wirPiRes = wiringPiSetup();
 		PCA9685Servo servo;
 		PCA9685 pca9685;
 		
 	motorsInterface(){
-		printf("Init obj");
+		printf("Init obj\n");
 		
 		if (bcmRes != 1) {
 			fprintf(stderr, "bcm2835_init() failed\n");
 		}
-		if (wirPiRes == -1){
-			fprintf(stderr,"ERROR: WIRINGPI setup error");
-			exit(-1);
-		}
 		
 		ROS_INFO("Setting PinMode");
-		/*
-		// left
-		bcm2835_gpio_write(INbcm1,1);
-		bcm2835_gpio_write(INbcm2,0);
-		// right
-		bcm2835_gpio_write(INbcm3,1);
-		bcm2835_gpio_write(INbcm4,0);
-		*/
-		digitalWrite(IN1,0);
-		digitalWrite(IN2,1);
-		digitalWrite(IN3,1);
-		digitalWrite(IN4,0);
+		// Pin mode settings
+		gpioSetMode(ENA, PI_OUTPUT);
+		gpioSetMode(ENB, PI_OUTPUT);
+		gpioSetMode(IN1, PI_OUTPUT);
+		gpioSetMode(IN2, PI_OUTPUT);
+		gpioSetMode(IN3, PI_OUTPUT);
+		gpioSetMode(IN4, PI_OUTPUT);
+
+		// setting direction pins to 0
+		gpioWrite(IN1,PI_LOW);
+		gpioWrite(IN2,PI_LOW);
+		gpioWrite(IN3,PI_LOW);
+		gpioWrite(IN4,PI_LOW);
 			
 			
 		// set forward as default
@@ -72,27 +63,27 @@ class motorsInterface {
 		// MG996R Servo Motor
 		this->servo.SetLeftUs(600);
 		this->servo.SetRightUs(2800);
+
 	}
 	
 	~motorsInterface(){}
 	
 	void setForward(){
-		digitalWrite(IN1,0);
-		digitalWrite(IN2,1);
-		digitalWrite(IN3,1);
-		digitalWrite(IN4,0);
+		gpioWrite(IN1,0);
+		gpioWrite(IN2,1);
+		gpioWrite(IN3,1);
+		gpioWrite(IN4,0);
 	}
 	
 	void setBackward(){
-		digitalWrite(IN1,1);
-		digitalWrite(IN2,0);
-		digitalWrite(IN3,0);
-		digitalWrite(IN4,1);
+		gpioWrite(IN1,1);
+		gpioWrite(IN2,0);
+		gpioWrite(IN3,0);
+		gpioWrite(IN4,1);
 	}
 	
 	void listenerCallback(const minicar::Motors& msg){
 		ROS_INFO("motors: [%f %f]", msg.throttle, msg.steering);
-		
 		int th = (int)(msg.throttle*MAX_DUTY_CYCLE/MAX_SPEED);
 		double steer = msg.steering*180/M_PI;
 		
@@ -111,11 +102,13 @@ class motorsInterface {
 		this->pca9685.Write(CHANNEL(ENA),VALUE(0));
 		this->pca9685.Write(CHANNEL(ENB),VALUE(0));
 		this->servo.SetAngle(CHANNEL(15), ANGLE(CENTER));
-		pinMode(IN1,INPUT);
-		pinMode(IN2,INPUT);
-		pinMode(IN3,INPUT);
-		pinMode(IN4,INPUT);
-		
+		gpioSetMode(IN1,PI_INPUT);
+		gpioSetMode(IN2,PI_INPUT);
+		gpioSetMode(IN3,PI_INPUT);
+		gpioSetMode(IN4,PI_INPUT);
+
+		//Free resources & GPIO access
+   		gpioTerminate();
 	}
 	
 };
@@ -126,16 +119,13 @@ int main(int argc, char **argv) {
 	ros::init(argc,argv,"MotorsManager");
 	ROS_INFO("Ros init");
 	ros::NodeHandle n;
-	
-	motorsInterface motorsInt;
-	pinMode(IN1, OUTPUT);
-	pinMode(IN2, OUTPUT);
-	pinMode(ENA, PWM_OUTPUT);
+	if(gpioInitialise()<0){
+		fprintf(stderr, "PiGPIO initialisation failed.\n\r");
+		return -1;
+	}
 
-	pinMode(IN3, OUTPUT);
-	pinMode(IN4, OUTPUT);
-	pinMode(ENB, PWM_OUTPUT);
-	
+	motorsInterface motorsInt;
+
 	ros::Subscriber sub = n.subscribe("motorsCtrl",1,&motorsInterface::listenerCallback, &motorsInt);
 
 	if (getuid() != 0) {

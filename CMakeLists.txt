@@ -166,8 +166,8 @@ add_executable(kalmanFilter src/EKF.cpp)
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
 # set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
-set_target_properties(motorsManager PROPERTIES COMPILE_FLAGS "-lbcm2835 -lwiringPi -lpca9685")
-set_target_properties(accelerometer PROPERTIES COMPILE_FLAGS "-lMPU6050 -lpthread")
+set_target_properties(motorsManager PROPERTIES COMPILE_FLAGS "-pthread -lrt -lpigpio -lbcm2835 -lpca9685")
+set_target_properties(accelerometer PROPERTIES COMPILE_FLAGS "-lMPU6050")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
@@ -195,8 +195,8 @@ target_link_libraries(localization
 target_link_libraries(motorsManager
   ${catkin_LIBRARIES}
   ${pca9685_LIB}
-  wiringPi
   bcm2835
+  pigpio
 )
 target_link_libraries(accelerometer
 	${catkin_LIBRARIES}
