@@ -155,7 +155,6 @@ FIND_LIBRARY(MPU6050_LIB MPU6050 ./include/MPU6050/)
 ## The recommended prefix ensures that target names across packages don't collide
 
 add_executable(controller src/control.cpp)
-add_executable(listener src/listener.cpp)
 add_executable(localization src/btsSensors.cpp)
 add_executable(motorsManager src/motorsManager.cpp)
 add_executable(accelerometer src/accelerometer.cpp)
